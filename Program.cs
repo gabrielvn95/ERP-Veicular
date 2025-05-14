@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace GestVeicular
 {
     public class Program
@@ -8,6 +10,9 @@ namespace GestVeicular
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<DbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
 
             var app = builder.Build();
 
