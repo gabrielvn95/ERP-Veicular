@@ -1,6 +1,7 @@
 ﻿using GestVeicular.Data;
 using GestVeicular.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestVeicular.Controllers
 {
@@ -96,40 +97,87 @@ namespace GestVeicular.Controllers
             return response;
 
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<Response<Cliente>> Editar(Cliente cliente)
+        public async Task<Response<Cliente>> EditarCliente(Cliente cliente)
         {
             Response<Cliente> response = new Response<Cliente>();
             try
             {
-                var clienteExistente = await _context.Clientes.FindAsync(cliente.IdCliente);
-                if(ModelState.IsValid)
-                    {
-                    if (clienteExistente != null)
-                    {
-                        clienteExistente.Nome = cliente.Nome;
-                        clienteExistente.Cpf = cliente.Cpf;
-                        clienteExistente.Telefone = cliente.Telefone;
-                        _context.Clientes.Update(clienteExistente);
-                        await _context.SaveChangesAsync();
-                        response.Status = true;
-                        response.Mensagem = $"Cliente {cliente.Nome} editado com sucesso.";
-                    }
-                    else
-                    {
-                        response.Status = false;
-                        response.Mensagem = "Cliente não encontrado.";
-                    }
+                if (ModelState.IsValid)
+                {
+                    _context.Clientes.Update(cliente);
+                    await _context.SaveChangesAsync();
+                    response.Status = true;
+                    response.Mensagem = $"Cliente {cliente.Nome} editado com sucesso.";
                 }
-                catch
+                else
+                {
+                    response.Status = false;
+                    response.Mensagem = "Erro ao editar cliente.";
+                }
+            }
+            catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro ao editar cliente {}.";
+                response.Mensagem = ex.Message;
             }
+            return response;
 
-
-            }
         }
-    }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Response<Cliente>> DeletarCliente(int id)
+        {
+            Response<Cliente> response = new Response<Cliente>();
+            try
+            {
+                var cliente = await _context.Clientes.FindAsync(id);
+                if (cliente == null)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Cliente não encontrado.";
+                    return response;
+                }
+                _context.Clientes.Remove(cliente);
+                await _context.SaveChangesAsync();
+                response.Status = true;
+                response.Mensagem = $"Cliente {cliente.Nome} deletado com sucesso.";
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = ex.Message;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<Response<List<Cliente>>> ListarClientes()
+        {
+            var response = new Response<List<Cliente>>();
+            try
+            {
+                var clientes = await _context.Clientes.AsNoTracking().ToListAsync();
+                if (clientes.Count == 0)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Nenhum cliente encontrado.";
+                    return response;
+                }
+                response.Status = true;
+                response.Dados = clientes;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = $"Erro: {ex.Message}";
+            }
+            return response;
+        }
+        }
 }
+
