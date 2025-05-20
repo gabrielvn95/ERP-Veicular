@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using GestVeicular.Enums; 
 
 namespace GestVeicular.Models
 {
@@ -29,6 +31,8 @@ namespace GestVeicular.Models
         [Range(0, double.MaxValue, ErrorMessage = "O campo Valor do Serviço deve ser um número positivo.")]
         public decimal ValorServico { get; set; }
 
-
+        [Required]
+        [Display(Name = "Status do Serviço")]
+        public StatusServicos Status { get; set; } = StatusServicos.NaoFinalizado;
     }
 }

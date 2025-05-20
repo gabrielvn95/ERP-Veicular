@@ -158,12 +158,6 @@ C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\scopedcss\projectbundl
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets\msbuild.GestVeicular.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets\msbuild.GestVeicular.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets\msbuild.build.GestVeicular.props
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.GestVeicular.props
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.GestVeicular.props
-C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\GestVeic.558D7002.Up2Date
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\GestVeicular.dll
@@ -171,3 +165,5 @@ C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\refint\GestVeicular.dl
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\GestVeicular.pdb
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\GestVeicular.genruntimeconfig.cache
 C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\ref\GestVeicular.dll
+C:\Users\gabri\source\repos\GestVeicular\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\gabri\source\repos\GestVeicular\obj\Debug\net8.0\staticwebassets.build.json.cache
