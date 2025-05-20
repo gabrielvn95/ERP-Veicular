@@ -130,7 +130,8 @@ namespace GestVeicular.Services.VeiculoService
         public async Task<Response<List<Veiculo>>> ListarVeiculos()
         {
             Response<List<Veiculo>> response = new Response<List<Veiculo>>();
-            try             {
+            try             
+            {
                 var veiculos = await _context.Veiculos.ToListAsync();
                 if (veiculos == null || !veiculos.Any())
                 {
