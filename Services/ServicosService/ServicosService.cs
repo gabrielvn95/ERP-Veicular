@@ -1,4 +1,5 @@
 ﻿using GestVeicular.Data;
+using GestVeicular.Enums;
 using GestVeicular.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,38 @@ namespace GestVeicular.Services.ServicosService
                 return response;
             }
 
+        }
+
+        public async Task<Response<Servicos>> AtualizarStatusVenda(int idServico, StatusServicos novoStatus)
+        {
+            Response<Servicos> response = new Response<Servicos>();
+            try
+            {
+                var servicoExistente = await _context.Servicos.FindAsync(idServico);
+                if (servicoExistente == null)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Serviço não encontrado.";
+                    return response;
+                }
+
+                servicoExistente.Status = novoStatus;
+                servicoExistente.DataUltimaAtualizacao = DateTime.Now;
+
+                _context.Servicos.Update(servicoExistente);
+                await _context.SaveChangesAsync();
+
+                response.Status = true;
+                response.Mensagem = "Status do serviço atualizado com sucesso.";
+                response.Dados = servicoExistente;
+                return response;
+
+            } catch(Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = $"Erro: {ex.Message}";
+                return response;
+            }
         }
 
         public async Task<Response<Servicos>> BuscarServicoPorId(int idServico)
