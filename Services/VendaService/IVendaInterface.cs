@@ -1,4 +1,5 @@
-﻿using GestVeicular.Models;
+﻿using GestVeicular.Enums;
+using GestVeicular.Models;
 
 namespace GestVeicular.Services.VendaService
 {
@@ -9,6 +10,7 @@ namespace GestVeicular.Services.VendaService
         Task<Response<Venda>> DeletarVenda(int idVenda);
         Task<Response<Venda>> Detalhes(int idVenda);
         Task<Response<List<Venda>>> ListarVendas();
-        Task<Response<Venda>> ConcluirVenda(int idVenda);
+        Task<Response<Venda>> AtualizarStatusVenda(int idVenda, StatusServicos novoStatus);
+
     }
 }

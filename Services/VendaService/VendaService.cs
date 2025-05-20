@@ -1,4 +1,5 @@
 ﻿using GestVeicular.Data;
+using GestVeicular.Enums;
 using GestVeicular.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,41 @@ namespace GestVeicular.Services.VendaService
         {
             _context = context;
         }
+
+        public async Task<Response<Venda>> AtualizarStatusVenda(int idVenda, StatusServicos novoStatus)
+        {
+            Response<Venda> response = new Response<Venda>();
+            try
+            {
+                var vendaExistente = await _context.Vendas.FindAsync(idVenda);
+                if (vendaExistente == null)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Venda não encontrada.";
+                    return response;
+                }
+
+          
+                vendaExistente.Status = novoStatus;
+                vendaExistente.DataUltimaAtualizacao = DateTime.Now; 
+
+                _context.Vendas.Update(vendaExistente);
+                await _context.SaveChangesAsync();
+
+                response.Status = true;
+                response.Mensagem = "Status da venda atualizado com sucesso.";
+                response.Dados = vendaExistente;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = $"Erro: {ex.Message}";
+                return response;
+            }
+        }
+
+
         public async Task<Response<Venda>> AtualizarVenda(Venda venda)
         {
             Response<Venda> response = new Response<Venda>();
@@ -42,37 +78,6 @@ namespace GestVeicular.Services.VendaService
             }
         }
 
-        public async Task<Response<Venda>> ConcluirVenda(int idVenda)
-        {
-            Response<Venda> response = new Response<Venda>();
-            try
-            {
-                var venda = await _context.Vendas.FindAsync(idVenda);
-                if (venda == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Venda não encontrada.";
-                    return response;
-                }
-                if(venda.Veiculo == null || venda.Cliente == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Venda não pode ser concluída sem veículo ou cliente.";
-                    return response;
-                }
-
-                response.Status = true;
-                response.Mensagem = "Venda concluída com sucesso.";
-                response.Dados = venda;
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
-            }
-        }
 
         public async Task<Response<Venda>> CriarVenda(Venda venda)
         {

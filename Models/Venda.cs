@@ -14,6 +14,7 @@ namespace GestVeicular.Models
         [Required(ErrorMessage = "O campo Valor da venda é obrigatório.")]
         [Range(0, double.MaxValue, ErrorMessage = "O campo Valor do Serviço deve ser um número positivo.")]
         public decimal ValorDaVenda { get; set; }
+        public DateTime DataUltimaAtualizacao { get; set; } = DateTime.Now; 
 
         public StatusServicos Status { get; set; } = StatusServicos.NaoFinalizado;
 
