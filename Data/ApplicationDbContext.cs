@@ -14,6 +14,7 @@ namespace GestVeicular.Data
         public DbSet<Servicos> Servicos { get; set; }
         public DbSet<Venda> Vendas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<AlterarSenha> AlterarSenha { get; set; }
 
     }
 }

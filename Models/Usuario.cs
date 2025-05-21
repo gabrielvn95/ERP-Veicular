@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GestVeicular.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestVeicular.Models
 {
@@ -12,5 +13,6 @@ namespace GestVeicular.Models
         public byte[] SenhaSalt { get; set; }
         public DateTime DataCadastro { get; set; } = DateTime.Now;
         public DateTime? DataUltimoAcesso { get; set; } = null;
+        public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.Padrao;
     }
 }

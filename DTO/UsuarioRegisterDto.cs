@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GestVeicular.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestVeicular.DTO
 {
@@ -19,5 +20,6 @@ namespace GestVeicular.DTO
         [Required(ErrorMessage = "O campo confirmar senha é obrigatório")]
         [Compare("Senha", ErrorMessage = "As senhas não coincidem")]
         public string ConfirmarSenha { get; set; }
+        public TipoUsuario? TipoUsuario { get; set; }
     }
 }
