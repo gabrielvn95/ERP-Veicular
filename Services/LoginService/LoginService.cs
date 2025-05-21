@@ -1,5 +1,6 @@
 ﻿using GestVeicular.Data;
 using GestVeicular.DTO;
+using GestVeicular.Enums;
 using GestVeicular.Models;
 using GestVeicular.Services.SenhaService;
 using GestVeicular.Services.SessaoService;
@@ -55,14 +56,14 @@ namespace GestVeicular.Services.LoginService
             return response;
         }
 
-
-        public async Task<Response<Usuario>> RegistrarUsuario(UsuarioRegisterDto usuarioRegisterDto)
+        public async Task<Response<Usuario>> RegistrarUsuario(UsuarioRegisterDto usuarioRegisterDto, TipoUsuario tipoUsuarioLogado)
         {
             Response<Usuario> response = new Response<Usuario>();
+
             try
             {
-                var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == usuarioRegisterDto.Email);
-                if (usuario != null)
+                var usuarioExistente = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == usuarioRegisterDto.Email);
+                if (usuarioExistente != null)
                 {
                     response.Status = false;
                     response.Mensagem = "Usuário já existe.";
@@ -70,19 +71,31 @@ namespace GestVeicular.Services.LoginService
                 }
 
                 _senhaInterface.CriarSenhaHash(usuarioRegisterDto.Senha, out byte[] senhaHash, out byte[] senhaSalt);
-                usuario = new Usuario()
+
+           
+                TipoUsuario tipoParaSalvar = TipoUsuario.Padrao;
+
+                if (tipoUsuarioLogado == TipoUsuario.Admin && usuarioRegisterDto.TipoUsuario.HasValue)
+                {
+                    tipoParaSalvar = usuarioRegisterDto.TipoUsuario.Value;
+                }
+
+                var usuario = new Usuario
                 {
                     Nome = usuarioRegisterDto.Nome,
                     Email = usuarioRegisterDto.Email,
                     SenhaHash = senhaHash,
                     SenhaSalt = senhaSalt,
+                    TipoUsuario = tipoParaSalvar,
                     DataUltimoAcesso = DateTime.Now
                 };
+
                 await _context.Usuarios.AddAsync(usuario);
                 await _context.SaveChangesAsync();
+
                 response.Status = true;
                 response.Mensagem = $"Usuário {usuarioRegisterDto.Nome} registrado com sucesso.";
-                response.Dados = usuario; 
+                response.Dados = usuario;
             }
             catch (Exception ex)
             {
@@ -90,8 +103,9 @@ namespace GestVeicular.Services.LoginService
                 response.Mensagem = $"Erro: {ex.Message}";
             }
 
-            return response; 
+            return response;
         }
     }
-   }
+    }
+   
 

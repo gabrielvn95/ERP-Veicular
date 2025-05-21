@@ -5,7 +5,7 @@
         NaoFinalizado = 0,
         EmAndamento = 1,
         Finalizado = 2,
-        Cancelado = 3,
+        Cancelado = 3
 
     }
 }
