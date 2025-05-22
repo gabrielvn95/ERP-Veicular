@@ -2,153 +2,158 @@
 using Microsoft.AspNetCore.Mvc;
 using GestVeicular.Models;
 using GestVeicular.Data;
+using GestVeicular.Services.SessaoService;
+using GestVeicular.Services.ServicosService;
 
 namespace GestVeicular.Controllers
 {
-  
 
     public class ServicosController : Controller
-    {   
+    {
+        private readonly ISessaoInterface _sessaoInterface;
+        private readonly IServicosInterface _servicosInterface;
 
-        private readonly ApplicationDbContext _context;
-        private readonly Servicos _servicos;
-        public ServicosController(ApplicationDbContext context, Servicos servicos)
+        public ServicosController(ISessaoInterface sessaoInterface, IServicosInterface servicosInterface)
         {
-            _context = context;
-            _servicos = servicos;
+            _sessaoInterface = sessaoInterface;
+            _servicosInterface = servicosInterface;
         }
 
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var servicos = await _servicosInterface.BuscarTodosServicos();
+            return View(servicos.Dados);
+
+        }
+
+        [HttpGet]
+        public IActionResult Cadastrar()
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
             return View();
         }
 
         [HttpGet]
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Editar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var servico = await _servicosInterface.BuscarServicoPorId(id);
+            return View(servico.Dados);
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public async Task<IActionResult> Deletar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var servico = await _servicosInterface.BuscarServicoPorId(id);
+            return View(servico.Dados);
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Detalhes(int id)
         {
-            return View();
+            var response = await _servicosInterface.BuscarServicoPorId(id);
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
+
+            return View(response.Dados);
 
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-
-        public async Task<Response<Servicos>> Detalhes(int id)
+        public async Task<IActionResult> Cadastrar(Servicos servico)
         {
-            Response<Servicos> response = new Response<Servicos>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                var servico = await _context.Servicos.FindAsync(id);
-                if (servico == null)
+                return RedirectToAction("Login", "Login");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _servicosInterface.AdicionarServico(servico);
+                if (response.Status)
                 {
-                    response.Status = false;
-                    response.Mensagem = "Serviço não encontrado.";
-                    return response;
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
                 }
-                response.Status = true;
-                response.Dados = servico;
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
-            }
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Servicos>> CriarServico(Servicos servicos)
-        {
-            Response<Servicos> response = new Response<Servicos>();
-            try
-            {
-                
-                    _context.Servicos.Add(servicos);
-                    await _context.SaveChangesAsync();
-                    response.Mensagem = "Serviço cadastrado com sucesso!";
-
-                    return response;
-                    
-            }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
-            }
-
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Servicos>> EditarServico(int id)
-        {
-            Response<Servicos> response = new Response<Servicos>();
-            try
-            {
-                var servico = await _context.Servicos.FindAsync(id);
-                if (servico == null)
+                else
                 {
-                    response.Status = false;
-                    response.Mensagem = "Serviço não encontrado.";
-                    return response;
+                    TempData["MensagemErro"] = response.Mensagem;
+                    return View(servico);
                 }
-                servico.DataUltimaAtualizacao = DateTime.Now;
-                await _context.SaveChangesAsync();
-                response.Status = true;
-                response.Mensagem = "Serviço atualizado com sucesso!";
-                return response;
             }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
-            }
+            return View(servico);
         }
 
-            [HttpGet]
-        public ActionResult ExcluirServico(int id)
-        {
-            return View();
-        }
-
-        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task <Response<Servicos>> ExcluirServico(Servicos servicos)
+        public async Task<IActionResult> Editar(Servicos servico)
         {
-            Response<Servicos> response = new Response<Servicos>();
-            try
-            { 
-                _context.Servicos.Remove(servicos);
-                await _context.SaveChangesAsync();
-                response.Status = true;
-                response.Mensagem = "Serviço excluído com sucesso!";
-                return response;
-            }
-            catch (Exception ex)
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
+                return RedirectToAction("Login", "Login");
             }
+            if (ModelState.IsValid)
+            {
+                var response = await _servicosInterface.AtualizarServico(servico);
+                if (response.Status)
+                {
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["MensagemErro"] = response.Mensagem;
+                    return View(servico);
+                }
+            }
+            return View(servico);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Deletar(Servicos servico)
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _servicosInterface.DeletarServico(servico.IdServico);
+                if (response.Status)
+                {
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["MensagemErro"] = response.Mensagem;
+                    return View(servico);
+                }
+            }
+            return View(servico);
+
         }
     }
 }
