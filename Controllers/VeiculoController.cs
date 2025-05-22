@@ -1,204 +1,153 @@
-﻿using GestVeicular.Data;
-using GestVeicular.Models;
+﻿using GestVeicular.Models;
+using GestVeicular.Services.SessaoService;
+using GestVeicular.Services.VeiculoService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace GestVeicular.Controllers
 {
     public class VeiculoController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly Veiculo _veiculo;
-        public VeiculoController(ApplicationDbContext context, Veiculo veiculo)
+        private readonly IVeiculoInterface _veiculoInterface;
+        private readonly ISessaoInterface _sessaoInterface;
+
+        public VeiculoController(IVeiculoInterface veiculoInterface, ISessaoInterface sessaoInterface)
         {
-            _context = context;
-            _veiculo = veiculo;
+            _veiculoInterface = veiculoInterface;
+            _sessaoInterface = sessaoInterface;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var veiculos = await _veiculoInterface.ListarVeiculos();
+            return View(veiculos.Dados);
+        }
+
+        [HttpGet]
+        public IActionResult Cadastrar()
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
             return View();
         }
 
         [HttpGet]
-        public IActionResult Detalhes(int id)
+        public async Task<IActionResult> Editar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var veiculo = await _veiculoInterface.BuscarVeiculoPorId(id);
+            return View(veiculo.Dados);
         }
 
         [HttpGet]
-        public IActionResult Criar()
+        public async Task<IActionResult> Deletar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var veiculo = await _veiculoInterface.BuscarVeiculoPorId(id);
+            return View(veiculo.Dados);
         }
 
         [HttpGet]
-        public IActionResult Editar(int id)
+        public async Task<IActionResult> Detalhes(int id)
         {
-            return View();
-        }
+            var response = await _veiculoInterface.Detalhes(id);
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
 
-        [HttpGet]
-        public IActionResult Deletar(int id)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Listar()
-        {
-            return View();
+            return View(response.Dados);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Veiculo>> DetalhesVeiculo(int id)
+        public async Task<IActionResult> Cadastrar(Veiculo veiculo)
         {
-            Response<Veiculo> response = new Response<Veiculo>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                var veiculo = await _context.Veiculos.FindAsync(id);
-                if (veiculo == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Veículo não encontrado.";
-                    return response;
-                }
-                response.Status = true;
-                response.Mensagem = $"Veículo {veiculo.IdVeiculo} encontrado com sucesso.";
-                response.Dados = veiculo;
+                return RedirectToAction("Login", "Login");
             }
-            catch (Exception ex)
+            if (ModelState.IsValid)
             {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-            return response;
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Veiculo>> CriarVeiculo(Veiculo veiculo)
-        {
-            Response<Veiculo> response = new Response<Veiculo>();
-            try
-            {
-                if (ModelState.IsValid)
+                var response = await _veiculoInterface.AdicionarVeiculo(veiculo);
+                if (response.Status)
                 {
-                    _context.Veiculos.Add(veiculo);
-                    await _context.SaveChangesAsync();
-                    response.Status = true;
-                    response.Mensagem = $"Veículo {veiculo}, criado com sucesso.";
-                    response.Dados = veiculo;
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Mensagem = "Erro ao criar veículo.";
+                    TempData["MensagemErro"] = response.Mensagem;
                 }
             }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-            return response;
-
+            return View(veiculo);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Veiculo>> EditarVeiculo(int id)
+        public async Task<IActionResult> Editar(Veiculo veiculo)
         {
-            Response<Veiculo> response = new Response<Veiculo>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                var veiculo = await _context.Veiculos.FindAsync(id);
-                if (veiculo == null)
+                return RedirectToAction("Login", "Login");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _veiculoInterface.AtualizarVeiculo(veiculo);
+                if (response.Status)
                 {
-                    response.Status = false;
-                    response.Mensagem = "Veículo não encontrado.";
-                    return response;
-                }
-                if (ModelState.IsValid)
-                {
-                    _context.Veiculos.Update(veiculo);
-                    await _context.SaveChangesAsync();
-                    response.Status = true;
-                    response.Mensagem = $"Veículo {veiculo}, editado com sucesso.";
-                    response.Dados = veiculo;
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Mensagem = "Erro ao editar veículo.";
+                    TempData["MensagemErro"] = response.Mensagem;
                 }
             }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-
-            return response;
+            return View(veiculo);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Veiculo>> DeletarVeiculo(int id)
+        public async Task<IActionResult> Deletar(Veiculo veiculo)
         {
-            Response<Veiculo> response = new Response<Veiculo>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                var veiculo = await _context.Veiculos.FindAsync(id);
-                if (veiculo == null)
+                return RedirectToAction("Login", "Login");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _veiculoInterface.DeletarVeiculo(veiculo.IdVeiculo);
+                if (response.Status)
                 {
-                    response.Status = false;
-                    response.Mensagem = "Veículo não encontrado.";
-                    return response;
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
                 }
-                _context.Veiculos.Remove(veiculo);
-                await _context.SaveChangesAsync();
-                response.Status = true;
-                response.Mensagem = $"Veículo {veiculo}, deletado com sucesso.";
-                response.Dados = veiculo;
+                else
+                {
+                    TempData["MensagemErro"] = response.Mensagem;
+                }
             }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-            return response;
+            return View(veiculo);
         }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Veiculo>> ListarVeiculos(Veiculo veiculo)
-        {
-            Response<Veiculo> response = new Response<Veiculo>();
-            try
-            {
-                var veiculos = await _context.Veiculos.ToListAsync();
-                if (veiculos == null || !veiculos.Any())
-                {
-                    response.Status = false;
-                    response.Mensagem = "Nenhum veículo encontrado.";
-                    return response;
-                }
-                response.Status = true;
-                response.Mensagem = "Veículos encontrados com sucesso.";
-                response.Dados = veiculo;
-
-            }
-
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-            return response;
-
+       
         }
     }
-}
+
