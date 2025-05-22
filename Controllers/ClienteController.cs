@@ -1,5 +1,6 @@
-﻿using GestVeicular.Data;
-using GestVeicular.Models;
+﻿using GestVeicular.Models;
+using GestVeicular.Services.ClienteService;
+using GestVeicular.Services.SessaoService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,177 +8,139 @@ namespace GestVeicular.Controllers
 {
     public class ClienteController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly Cliente _cliente;
-        public ClienteController(ApplicationDbContext context, Cliente cliente)
+     private readonly IClienteInterface _clienteInterface;
+     private readonly ISessaoInterface _sessaoInterface;
+
+        public ClienteController(IClienteInterface clienteInterface, ISessaoInterface sessaoInterface)
         {
-            _cliente = cliente;
-            _context = context;
+            _clienteInterface = clienteInterface;
+            _sessaoInterface = sessaoInterface;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var clientes = await _clienteInterface.ListarClientes();
+            return View(clientes.Dados);
+        }
+
+        [HttpGet]
+        public IActionResult Cadastrar()
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
             return View();
         }
 
         [HttpGet]
-        public IActionResult Criar()
+        public async Task<IActionResult> Editar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var cliente = await _clienteInterface.BuscarClientePorId(id);
+            return View(cliente.Dados);
         }
 
         [HttpGet]
-        public IActionResult Editar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            return View();
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            var cliente = await _clienteInterface.BuscarClientePorId(id);
+            return View(cliente.Dados);
         }
 
         [HttpGet]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Detalhes(int id)
         {
-            return View();
-        }
+            var response = await _clienteInterface.Detalhes(id);
 
-        [HttpGet]
-        public IActionResult Listar()
-        {
-            return View();
-        }
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;   
+                return RedirectToAction("Index");
+            }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Cliente>> Criar(Cliente cliente)
-        {
-            Response<Cliente> response = new Response<Cliente>();
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Clientes.Add(cliente);
-                    await _context.SaveChangesAsync();
-                    response.Status = true;
-                    response.Mensagem = $"Cliente {cliente.Nome} criado com sucesso.";
-                }
-                else
-                {
-                    response.Status = false;
-                    response.Mensagem = "Erro ao cadastrar cliente.";
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = ex.Message;
-            }
-            return response;
+            return View(response.Dados);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Cliente>> Detalhes(int id)
+        public async Task<IActionResult> Cadastrar(Cliente cliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                var cliente = await _context.Clientes.FindAsync(id);
-                if (cliente == null)
+                return RedirectToAction("Login", "Login");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = await _clienteInterface.AdicionarCliente(cliente);
+                if (response.Status)
                 {
-                    response.Status = false;
-                    response.Mensagem = "Cliente não encontrado.";
-                    return response;
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
                 }
-                response.Status = true;
-                response.Dados = cliente;
-                return response;
+                TempData["MensagemErro"] = response.Mensagem;
             }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-            }
-            return response;
-
+            return View(cliente);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Cliente>> EditarCliente(Cliente cliente)
+        public async Task<IActionResult> Editar(Cliente cliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
-            try
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                if (ModelState.IsValid)
-                {
-                    _context.Clientes.Update(cliente);
-                    await _context.SaveChangesAsync();
-                    response.Status = true;
-                    response.Mensagem = $"Cliente {cliente.Nome} editado com sucesso.";
-                }
-                else
-                {
-                    response.Status = false;
-                    response.Mensagem = "Erro ao editar cliente.";
-                }
+                return RedirectToAction("Login", "Login");
             }
-            catch (Exception ex)
+            if (ModelState.IsValid)
             {
-                response.Status = false;
-                response.Mensagem = ex.Message;
+                var response = await _clienteInterface.AtualizarCliente(cliente);
+                if (response.Status)
+                {
+                    TempData["MensagemSucesso"] = response.Mensagem;
+                    return RedirectToAction("Index");
+                }
+                TempData["MensagemErro"] = response.Mensagem;
             }
-            return response;
-
+            return View(cliente);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<Cliente>> DeletarCliente(int id)
+        public async Task<IActionResult> Deletar(Cliente cliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
-            try
+            if (cliente == null)
             {
-                var cliente = await _context.Clientes.FindAsync(id);
-                if (cliente == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Cliente não encontrado.";
-                    return response;
-                }
-                _context.Clientes.Remove(cliente);
-                await _context.SaveChangesAsync();
-                response.Status = true;
-                response.Mensagem = $"Cliente {cliente.Nome} deletado com sucesso.";
+                TempData["MensagemErro"] = "Cliente não encontrado.";
+                return View(cliente);
             }
-            catch (Exception ex)
+            var clienteResult = await _clienteInterface.BuscarClientePorId(cliente.IdCliente);
+            if (clienteResult.Status)
             {
-                response.Status = false;
-                response.Mensagem = ex.Message;
+                TempData["MensagemSucesso"] = clienteResult.Mensagem;
+            }else
+            {
+                TempData["MensagemErro"] = clienteResult.Mensagem;
+                return View(clienteResult);
             }
-            return response;
+
+            return RedirectToAction("Index");
+
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<Response<List<Cliente>>> ListarClientes()
-        {
-            var response = new Response<List<Cliente>>();
-            try
-            {
-                var clientes = await _context.Clientes.AsNoTracking().ToListAsync();
-                if (clientes.Count == 0)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Nenhum cliente encontrado.";
-                    return response;
-                }
-                response.Status = true;
-                response.Dados = clientes;
-            }
-            catch (Exception ex)
-            {
-                response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-            }
-            return response;
-        }
         }
 }
 
