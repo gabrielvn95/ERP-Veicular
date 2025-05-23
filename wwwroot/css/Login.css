@@ -1,0 +1,110 @@
+﻿
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: url(../images/Fundo.png) no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    width: 420px;
+    padding: 40px;
+    box-shadow: 0 0 24px 8px #0077ff;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .login-container:hover {
+        transform: scale(1.02);
+    }
+
+.login-logo img {
+    width: 140px;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 10px #0077ff);
+}
+
+
+.login-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: #0077ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 6px #0077ff;
+}
+
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+    .input-group label {
+        font-weight: 700;
+        font-size: 16px;
+        color: #0055cc;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 2px solid #0077ff;
+        background-color: #f8f8f8;
+        color: #333;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3399ff;
+            box-shadow: 0 0 12px #3399ff;
+        }
+
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #0077ff, #0055cc);
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 0 12px #0077ff;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-login:hover {
+        background: linear-gradient(90deg, #0055cc, #003399);
+        box-shadow: 0 0 18px #3399ff;
+        transform: scale(1.05);
+    }
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+}

@@ -14,13 +14,13 @@ namespace GestVeicular.Services.SessaoService
         }
         public Usuario BuscarSessao()
         {
-            var SessaoUsuario = _ContextAccessor.HttpContext.Session.GetString("UsuarioLogado");
-            if(string.IsNullOrEmpty(SessaoUsuario))
+            var sessaoUsuario = _ContextAccessor.HttpContext.Session.GetString("sessaoUsuario");
+            if(string.IsNullOrEmpty(sessaoUsuario))
             {
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<Usuario>(SessaoUsuario);
+            return JsonConvert.DeserializeObject<Usuario>(sessaoUsuario);
         }
 
         public void CriarSessao(Usuario usuario)

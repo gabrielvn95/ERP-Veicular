@@ -1,5 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model GestVeicular.DTO.UsuarioLoginDto
+
 @{
+    Layout = null;
 }
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>Login GVN Solutions</title>
+    <link rel="stylesheet" href="~/css/login.css" />
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="~/images/Logoc.png" alt="GVN Solutions Logo" />
+            </div>
+
+            <h1 class="login-title">Acesse sua conta</h1>
+
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert">@TempData["MensagemErro"]</div>
+            }
+
+            <form asp-action="Login" asp-controller="Login" method="post" autocomplete="off">
+                <div class="input-group">
+                    <label asp-for="Email">E-mail</label>
+                    <input asp-for="Email" placeholder="Digite seu e-mail" autocomplete="username" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Senha">Senha</label>
+                    <input asp-for="Senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" />
+                    <span asp-validation-for="Senha" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+        </div>
+
+        <footer>
+            <small>© 2025 GVN Solutions - Tecnologia para o seu sucesso</small>
+        </footer>
+    </div>
+</body>
+</html>

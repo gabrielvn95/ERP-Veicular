@@ -1,5 +1,7 @@
+using GestVeicular.Data;
 using GestVeicular.Repositorio;
 using GestVeicular.Services.ClienteService;
+using GestVeicular.Services.LoginService;
 using GestVeicular.Services.SenhaService;
 using GestVeicular.Services.ServicosService;
 using GestVeicular.Services.SessaoService;
@@ -18,17 +20,27 @@ namespace GestVeicular
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<DbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+
 
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<ISessaoInterface, SessaoService>();
+            builder.Services.AddScoped<ILoginInterface, LoginService>();
             builder.Services.AddScoped<IVeiculoInterface, VeiculoService>();
             builder.Services.AddScoped<IServicosInterface, ServicosService>();
             builder.Services.AddScoped<ISenhaInterface, SenhaService>();
             builder.Services.AddScoped<IVendaInterface, VendaService>();
             builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
             builder.Services.AddScoped<IClienteInterface, ClienteService>();
+
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+
+
+            });
 
             var app = builder.Build();
 
@@ -46,10 +58,11 @@ namespace GestVeicular
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Login}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=Login}/{id?}");
 
             app.Run();
         }
