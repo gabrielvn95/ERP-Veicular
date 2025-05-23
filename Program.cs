@@ -1,3 +1,10 @@
+using GestVeicular.Repositorio;
+using GestVeicular.Services.ClienteService;
+using GestVeicular.Services.SenhaService;
+using GestVeicular.Services.ServicosService;
+using GestVeicular.Services.SessaoService;
+using GestVeicular.Services.VeiculoService;
+using GestVeicular.Services.VendaService;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestVeicular
@@ -13,6 +20,15 @@ namespace GestVeicular
 
             builder.Services.AddDbContext<DbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddScoped<ISessaoInterface, SessaoService>();
+            builder.Services.AddScoped<IVeiculoInterface, VeiculoService>();
+            builder.Services.AddScoped<IServicosInterface, ServicosService>();
+            builder.Services.AddScoped<ISenhaInterface, SenhaService>();
+            builder.Services.AddScoped<IVendaInterface, VendaService>();
+            builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+            builder.Services.AddScoped<IClienteInterface, ClienteService>();
 
             var app = builder.Build();
 
@@ -33,7 +49,7 @@ namespace GestVeicular
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=Index}/{id?}");
 
             app.Run();
         }
