@@ -1,1 +1,2 @@
-C:\Users\gabri\source\repos\GestVeicular\wwwroot\Images\gvn-solutions-logo.png
+C:\Users\gabri\source\repos\GestVeicular\wwwroot\Images\background-login.jpg
+C:\Users\gabri\source\repos\GestVeicular\wwwroot\Images\gvn-logo.png

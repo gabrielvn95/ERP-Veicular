@@ -1,8 +1,8 @@
 wwwroot\css\Register.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
-wwwroot\Images\Fundo.png
-wwwroot\Images\Logoc.png
+wwwroot\Images\background-login.jpg
+wwwroot\Images\gvn-logo.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
