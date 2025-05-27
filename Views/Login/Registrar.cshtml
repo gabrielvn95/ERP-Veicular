@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "Cadastro de Usuário";
-    Layout = null; // se quiser sem layout global
+    Layout = null;
+    var usuarioLogado = ViewBag.UsuarioLogado as GestVeicular.Models.Usuario;
 }
 
 <!DOCTYPE html>
@@ -18,42 +19,56 @@
         <div class="register-card">
             <div class="logo">GVN</div>
             <h2>Cadastro de Usuário</h2>
-            <form asp-action="Registrar" method="post">
+
+            <form asp-action="Registrar" method="post" autocomplete="off" novalidate>
                 <div class="form-group">
-                    <input asp-for="Nome" class="form-control" placeholder="Nome" />
+                    <input asp-for="Nome" placeholder="Nome" />
                     <span asp-validation-for="Nome" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <input asp-for="Sobrenome" class="form-control" placeholder="Sobrenome" />
+                    <input asp-for="Sobrenome" placeholder="Sobrenome" />
                     <span asp-validation-for="Sobrenome" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <input asp-for="Email" placeholder="Email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <input asp-for="Senha" type="password" class="form-control" placeholder="Senha" />
+                    <input asp-for="Senha" type="password" placeholder="Senha" />
                     <span asp-validation-for="Senha" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <input asp-for="ConfirmarSenha" type="password" class="form-control" placeholder="Confirmar Senha" />
+                    <input asp-for="ConfirmarSenha" type="password" placeholder="Confirmar Senha" />
                     <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <select asp-for="TipoUsuario" asp-items="Html.GetEnumSelectList<GestVeicular.Enums.TipoUsuario>()" class="form-control">
-                        <option value="">Tipo de Usuário</option>
-                    </select>
-                    <span asp-validation-for="TipoUsuario" class="text-danger"></span>
-                </div>
+
+                @if (usuarioLogado != null && usuarioLogado.TipoUsuario == GestVeicular.Enums.TipoUsuario.Admin)
+                {
+                    <div class="form-group">
+                        <select asp-for="TipoUsuario" class="form-control">
+                            <option value="" disabled selected>Tipo de Usuário</option>
+                            <option value="0">Padrão</option>
+                            <option value="1">Admin</option>
+                        </select>
+                        <span asp-validation-for="TipoUsuario" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" asp-for="TipoUsuario" value="0" />
+                }
+
                 <button type="submit" class="btn-submit">Cadastrar</button>
             </form>
         </div>
     </div>
 
     @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+        @await Html.PartialAsync("_ValidationScriptsPartial")
     }
 </body>
 </html>

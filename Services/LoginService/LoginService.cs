@@ -59,6 +59,7 @@ namespace GestVeicular.Services.LoginService
         public async Task<Response<Usuario>> RegistrarUsuario(UsuarioRegisterDto usuarioRegisterDto, TipoUsuario tipoUsuarioLogado)
         {
             Response<Usuario> response = new Response<Usuario>();
+         
 
             try
             {
@@ -72,12 +73,21 @@ namespace GestVeicular.Services.LoginService
 
                 _senhaInterface.CriarSenhaHash(usuarioRegisterDto.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
-           
                 TipoUsuario tipoParaSalvar = TipoUsuario.Padrao;
 
-                if (tipoUsuarioLogado == TipoUsuario.Admin && usuarioRegisterDto.TipoUsuario.HasValue)
+                if (tipoUsuarioLogado == TipoUsuario.Admin)
                 {
-                    tipoParaSalvar = usuarioRegisterDto.TipoUsuario.Value;
+       
+                    if (Enum.IsDefined(typeof(TipoUsuario), usuarioRegisterDto.TipoUsuario)
+                        && usuarioRegisterDto.TipoUsuario != TipoUsuario.Padrao)
+                    {
+                        tipoParaSalvar = usuarioRegisterDto.TipoUsuario;
+                    }
+                    else
+                    {
+                        
+                        tipoParaSalvar = TipoUsuario.Padrao;
+                    }
                 }
 
                 var usuario = new Usuario
@@ -105,7 +115,9 @@ namespace GestVeicular.Services.LoginService
 
             return response;
         }
+
+
     }
-    }
+}
    
 

@@ -20,6 +20,8 @@ namespace GestVeicular.DTO
         [Required(ErrorMessage = "O campo confirmar senha é obrigatório")]
         [Compare("Senha", ErrorMessage = "As senhas não coincidem")]
         public string ConfirmarSenha { get; set; }
-        public TipoUsuario? TipoUsuario { get; set; }
+
+        [Required(ErrorMessage = "O campo tipo de usuário é obrigatório")]
+        public TipoUsuario TipoUsuario { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace GestVeicular.Controllers
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly ILoginInterface _loginInterface;
         private readonly ISessaoInterface _sessaoInterface;
+
         public LoginController(IUsuarioRepositorio usuarioRepositorio, ILoginInterface loginInterface, ISessaoInterface sessaoInterface)
         {
             _loginInterface = loginInterface;
@@ -30,7 +31,31 @@ namespace GestVeicular.Controllers
 
         public IActionResult Registrar()
         {
+            var usuarioLogado = _sessaoInterface.BuscarSessao();
+            ViewBag.UsuarioLogado = usuarioLogado;
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Registrar(UsuarioRegisterDto usuarioRegisterDto)
+        {
+            var usuarioLogado = _sessaoInterface.BuscarSessao();
+            ViewBag.UsuarioLogado = usuarioLogado;
+
+            if (ModelState.IsValid)
+            {
+                var usuario = await _loginInterface.RegistrarUsuario(usuarioRegisterDto, Enums.TipoUsuario.Admin);
+                if (usuario.Status)
+                {
+                    TempData["MensagemSucesso"] = usuario.Mensagem;
+                    return RedirectToAction("Login", "Login");
+                }
+                else
+                {
+                    TempData["MensagemErro"] = usuario.Mensagem;
+                }
+            }
+            return View(usuarioRegisterDto);
         }
 
         public IActionResult Logout()
@@ -49,39 +74,26 @@ namespace GestVeicular.Controllers
         {
             if (ModelState.IsValid)
             {
-                var usuario = await _loginInterface.Login(usuarioLoginDto);
-                if (usuario.Status)
+                var resultadoLogin = await _loginInterface.Login(usuarioLoginDto);
+
+                if (resultadoLogin.Status)
                 {
-                    TempData["MensagemSucesso"] = usuario.Mensagem;
+                    var usuario = _usuarioRepositorio.BuscarPorEmail(usuarioLoginDto.Email);
+                    if (usuario != null)
+                    {
+                        _sessaoInterface.CriarSessao(usuario);
+                    }
+
+                    TempData["MensagemSucesso"] = resultadoLogin.Mensagem;
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    TempData["MensagemErro"] = usuario.Mensagem;
+                    TempData["MensagemErro"] = resultadoLogin.Mensagem;
                 }
             }
+
             return View(usuarioLoginDto);
         }
-
-        public async Task<IActionResult> Registrar(UsuarioRegisterDto usuarioRegisterDto)
-        {
-            if (ModelState.IsValid)
-            {
-                var usuario = await _loginInterface.RegistrarUsuario(usuarioRegisterDto, Enums.TipoUsuario.Padrao);
-                if (usuario.Status)
-                {
-                    TempData["MensagemSucesso"] = usuario.Mensagem;
-                    return RedirectToAction("Login", "Login");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = usuario.Mensagem;
-                }
-            }
-            return View(usuarioRegisterDto);
-
-        }
-
     }
 }
-
