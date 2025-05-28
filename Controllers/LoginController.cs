@@ -32,6 +32,12 @@ namespace GestVeicular.Controllers
         public IActionResult Registrar()
         {
             var usuarioLogado = _sessaoInterface.BuscarSessao();
+
+            if (usuarioLogado == null || usuarioLogado.TipoUsuario != Enums.TipoUsuario.Admin)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.UsuarioLogado = usuarioLogado;
             return View();
         }
@@ -40,6 +46,12 @@ namespace GestVeicular.Controllers
         public async Task<IActionResult> Registrar(UsuarioRegisterDto usuarioRegisterDto)
         {
             var usuarioLogado = _sessaoInterface.BuscarSessao();
+
+            if (usuarioLogado == null || usuarioLogado.TipoUsuario != Enums.TipoUsuario.Admin)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.UsuarioLogado = usuarioLogado;
 
             if (ModelState.IsValid)
