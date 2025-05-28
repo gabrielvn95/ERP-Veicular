@@ -7,8 +7,8 @@
     font-family: 'Inter', sans-serif;
 }
 
-body, html {
-    height: 100%;
+.register-page {
+    height: 100vh;
     background: #1E1E2F;
     display: flex;
     justify-content: center;

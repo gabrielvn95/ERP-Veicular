@@ -1,0 +1,128 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #1E1E2F;
+    color: #F5F5F7;
+}
+
+.painel-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 32px;
+    background-color: #2A2A40;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.painel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.painel-title {
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: #8DB8FF;
+}
+
+.painel-btn {
+    padding: 12px 20px;
+    background: linear-gradient(90deg, #5777FF, #3355CC);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #F0F4FF;
+    box-shadow: 0 6px 15px rgba(53, 80, 255, 0.6);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+    .painel-btn:hover {
+        background: linear-gradient(90deg, #7399FF, #4466FF);
+        box-shadow: 0 8px 18px rgba(83, 114, 255, 0.85);
+    }
+
+.alert-custom {
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 1rem;
+}
+
+.alert-erro {
+    background-color: #EF4444;
+    color: white;
+}
+
+.alert-sucesso {
+    background-color: #10B981;
+    color: white;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.painel-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #1F1F30;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+    .painel-table thead {
+        background-color: #111122;
+        color: #8DB8FF;
+    }
+
+    .painel-table th,
+    .painel-table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid #33334D;
+    }
+
+    .painel-table tbody tr:hover {
+        background-color: #292944;
+    }
+
+.btn-acao {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    transition: background 0.25s ease;
+    margin-right: 8px;
+}
+
+    .btn-acao.editar {
+        background-color: #3B82F6;
+    }
+
+        .btn-acao.editar:hover {
+            background-color: #2563EB;
+        }
+
+    .btn-acao.excluir {
+        background-color: #EF4444;
+    }
+
+        .btn-acao.excluir:hover {
+            background-color: #DC2626;
+        }
