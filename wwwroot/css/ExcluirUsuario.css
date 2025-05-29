@@ -1,0 +1,82 @@
+﻿.excluir-usuario-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: calc(100vh - 100px);
+    background-color: #f4f6f9;
+}
+
+.excluir-usuario-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.excluir-usuario-card h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.excluir-usuario-card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.excluir-usuario-card strong {
+    color: #212529;
+}
+
+.excluir-usuario-form {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.excluir-usuario-btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.excluir-usuario-btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+    .excluir-usuario-btn-danger:hover {
+        background-color: #c82333;
+    }
+
+.excluir-usuario-btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+    .excluir-usuario-btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+@media (max-width: 576px) {
+    .excluir-usuario-form {
+        flex-direction: column;
+    }
+
+    .excluir-usuario-btn {
+        width: 100%;
+    }
+}

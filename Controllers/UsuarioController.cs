@@ -57,7 +57,15 @@ public class UsuarioController : Controller
         }
     }
 
-    public IActionResult Deletar(int id)
+    public IActionResult Excluir(int id)
+    {
+        var usuario = _usuarioRepositorio.BuscarPorId(id);
+        if (usuario == null) return NotFound();
+        return View(usuario);
+    }
+
+    [HttpPost]
+    public IActionResult ExcluirPost(int id)
     {
         try
         {

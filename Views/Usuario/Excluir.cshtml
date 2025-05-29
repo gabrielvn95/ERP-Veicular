@@ -1,0 +1,24 @@
+﻿@model GestVeicular.Models.Usuario
+
+@{
+    ViewData["Title"] = "Confirmar Exclusão";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/ExcluirUsuario.css" />
+
+<div class="excluir-usuario-page">
+    <div class="excluir-usuario-container">
+        <div class="excluir-usuario-card">
+            <h2>Excluir Usuário</h2>
+
+            <p>Tem certeza que deseja excluir o usuário <strong>@Model.Nome</strong>?</p>
+            <p>Email: <strong>@Model.Email</strong></p>
+
+            <form asp-controller="Usuario" asp-action="ExcluirPost" asp-route-id="@Model.IdUsuario" method="post" class="excluir-usuario-form">
+                <button type="submit" class="excluir-usuario-btn excluir-usuario-btn-danger">Confirmar Exclusão</button>
+                <a asp-action="PainelAdmin" class="excluir-usuario-btn excluir-usuario-btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

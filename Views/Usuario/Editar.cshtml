@@ -1,0 +1,48 @@
+﻿@model GestVeicular.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuário";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/EditarUsuario.css" />
+
+<div class="edit-usuario-page">
+    <div class="edit-usuario-container">
+        <div class="edit-usuario-card">
+            <h2>Editar Usuário</h2>
+
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="edit-usuario-alert edit-usuario-alert-danger">@TempData["MensagemErro"]</div>
+            }
+
+            <form asp-action="Editar" method="post" class="edit-usuario-form">
+                <input type="hidden" asp-for="IdUsuario" />
+
+                <div class="edit-usuario-form-group">
+                    <label asp-for="Nome" class="edit-usuario-label"></label>
+                    <input asp-for="Nome" class="edit-usuario-input" />
+                    <span asp-validation-for="Nome" class="edit-usuario-text-danger"></span>
+                </div>
+
+                <div class="edit-usuario-form-group">
+                    <label asp-for="Email" class="edit-usuario-label"></label>
+                    <input asp-for="Email" class="edit-usuario-input" />
+                    <span asp-validation-for="Email" class="edit-usuario-text-danger"></span>
+                </div>
+
+                <div class="edit-usuario-form-group">
+                    <label asp-for="TipoUsuario" class="edit-usuario-label">Tipo de Usuário</label>
+                    <select asp-for="TipoUsuario" class="edit-usuario-input" asp-items="Html.GetEnumSelectList<GestVeicular.Enums.TipoUsuario>()"></select>
+                    <span asp-validation-for="TipoUsuario" class="edit-usuario-text-danger"></span>
+                </div>
+
+                <div class="edit-usuario-form-group" style="margin-top: 20px;">
+                    <button type="submit" class="edit-usuario-btn edit-usuario-btn-success">Salvar Alterações</button>
+                    <a asp-action="PainelAdmin" class="edit-usuario-btn edit-usuario-btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
