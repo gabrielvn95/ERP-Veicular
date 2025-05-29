@@ -3,6 +3,7 @@
 }
 
 <link rel="stylesheet" href="~/css/painelUsuario.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
 <div class="painel-container">
     @if (TempData["MensagemErro"] != null)
@@ -24,7 +25,7 @@
     </div>
 
     <div class="table-wrapper">
-        <table class="painel-table">
+        <table id="usuariosTable" class="painel-table">
             <thead>
                 <tr>
                     <th>Nome</th>

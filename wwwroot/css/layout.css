@@ -1,39 +1,19 @@
-﻿html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    background-color: #1E1E2F;
-    color: #F5F5F7;
-    font-family: 'Inter', sans-serif;
+﻿.gvn-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
 }
-
-    body > header,
-    body > footer {
-        flex-shrink: 0;
-    }
-
-    body > .container {
-        flex-grow: 1;
-        max-width: 1200px;
-        padding: 32px 15px;
-        background-color: #2A2A40;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-        margin-top: 40px;
-        margin-bottom: 40px;
-    }
 
 .navbar {
     background-color: #111122 !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
     .navbar .navbar-brand {
         color: #8DB8FF !important;
-        font-weight: 600;
+        font-weight: 700;
         font-family: 'Inter', sans-serif;
+        font-size: 1.25rem;
     }
 
     .navbar .nav-link {
@@ -43,18 +23,22 @@
         transition: color 0.3s ease;
     }
 
-        .navbar .nav-link:hover {
+        .navbar .nav-link:hover,
+        .navbar .nav-link:focus {
             color: #FFFFFF !important;
         }
 
-footer {
-    background-color: #111122;
-    color: #8DB8FF;
-    text-align: center;
-    padding: 24px 0;
-    font-size: 0.95rem;
-    margin-top: 40px;
-}
+        .navbar .nav-link.btn {
+            border-color: #8DB8FF !important;
+            color: #8DB8FF !important;
+            transition: all 0.3s ease;
+        }
+
+            .navbar .nav-link.btn:hover,
+            .navbar .nav-link.btn:focus {
+                background-color: #8DB8FF !important;
+                color: #111122 !important;
+            }
 
 .navbar-toggler {
     border-color: #8DB8FF !important;
