@@ -1,0 +1,30 @@
+﻿@model GestVeicular.Models.Cliente
+
+@{
+    ViewData["Title"] = "Confirmar Exclusão";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/RegistrarCliente.css" />
+
+<div class="register-page">
+    <div class="register-container">
+        <a asp-controller="Cliente" asp-action="Index" class="btn-voltar">← Voltar</a>
+
+        <div class="register-card">
+            <h2>Excluir Cliente</h2>
+
+            <p style="text-align: center; margin-bottom: 20px;">
+                Tem certeza que deseja excluir o cliente <strong>@Model.Nome</strong>?
+            </p>
+
+            <form asp-controller="Cliente" asp-action="Deletar" method="post">
+                <input type="hidden" asp-for="IdCliente" />
+
+                <button type="submit" class="btn-submit" style="background: linear-gradient(90deg, #FF5C5C, #CC3333); box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);">
+                    Confirmar Exclusão
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

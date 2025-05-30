@@ -1,0 +1,43 @@
+﻿@model GestVeicular.Models.Cliente
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/RegistrarCliente.css" />
+
+<div class="register-page">
+    <div class="register-container">
+        <a asp-controller="Cliente" asp-action="Index" class="btn-voltar">← Voltar</a>
+
+        <div class="register-card">
+            <h2>Editar Cliente</h2>
+
+            <form asp-controller="Cliente" asp-action="Editar" method="post" autocomplete="off" novalidate>
+                <input type="hidden" asp-for="IdCliente" />
+
+                <div class="form-group">
+                    <input asp-for="Nome" placeholder="Nome" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Cpf" placeholder="CPF" maxlength="11" />
+                    <span asp-validation-for="Cpf" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Telefone" placeholder="Telefone" maxlength="15" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn-submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

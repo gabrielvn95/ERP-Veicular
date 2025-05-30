@@ -2,14 +2,13 @@
 using GestVeicular.Services.ClienteService;
 using GestVeicular.Services.SessaoService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GestVeicular.Controllers
 {
     public class ClienteController : Controller
     {
-     private readonly IClienteInterface _clienteInterface;
-     private readonly ISessaoInterface _sessaoInterface;
+        private readonly IClienteInterface _clienteInterface;
+        private readonly ISessaoInterface _sessaoInterface;
 
         public ClienteController(IClienteInterface clienteInterface, ISessaoInterface sessaoInterface)
         {
@@ -24,6 +23,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var clientes = await _clienteInterface.ListarClientes();
             return View(clientes.Dados);
         }
@@ -36,6 +36,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             return View();
         }
 
@@ -47,20 +48,22 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var cliente = await _clienteInterface.BuscarClientePorId(id);
             return View(cliente.Dados);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Deletar(int id)
+        public async Task<IActionResult> ConfirmarDeletar(int id)
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var cliente = await _clienteInterface.BuscarClientePorId(id);
-            return View(cliente.Dados);
+            return View("ConfirmarDeletar", cliente.Dados); 
         }
 
         [HttpGet]
@@ -70,7 +73,7 @@ namespace GestVeicular.Controllers
 
             if (!response.Status)
             {
-                TempData["MensagemErro"] = response.Mensagem;   
+                TempData["MensagemErro"] = response.Mensagem;
                 return RedirectToAction("Index");
             }
 
@@ -85,6 +88,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             if (ModelState.IsValid)
             {
                 var response = await _clienteInterface.AdicionarCliente(cliente);
@@ -93,8 +97,10 @@ namespace GestVeicular.Controllers
                     TempData["MensagemSucesso"] = response.Mensagem;
                     return RedirectToAction("Index");
                 }
+
                 TempData["MensagemErro"] = response.Mensagem;
             }
+
             return View(cliente);
         }
 
@@ -106,6 +112,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             if (ModelState.IsValid)
             {
                 var response = await _clienteInterface.AtualizarCliente(cliente);
@@ -114,33 +121,35 @@ namespace GestVeicular.Controllers
                     TempData["MensagemSucesso"] = response.Mensagem;
                     return RedirectToAction("Index");
                 }
+
                 TempData["MensagemErro"] = response.Mensagem;
             }
+
             return View(cliente);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Deletar(Cliente cliente)
+        public async Task<IActionResult> Deletar(int IdCliente)
         {
-            if (cliente == null)
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
             {
-                TempData["MensagemErro"] = "Cliente não encontrado.";
-                return View(cliente);
-            }
-            var clienteResult = await _clienteInterface.BuscarClientePorId(cliente.IdCliente);
-            if (clienteResult.Status)
-            {
-                TempData["MensagemSucesso"] = clienteResult.Mensagem;
-            }else
-            {
-                TempData["MensagemErro"] = clienteResult.Mensagem;
-                return View(clienteResult);
+                return RedirectToAction("Login", "Login");
             }
 
-            return RedirectToAction("Index");
-
+            var response = await _clienteInterface.DeletarCliente(IdCliente);
+            if (response.Status)
+            {
+                TempData["MensagemSucesso"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                var cliente = await _clienteInterface.BuscarClientePorId(IdCliente);
+                return View("ConfirmarDeletar", cliente.Dados); 
+            }
         }
 
-        }
+    }
 }
-

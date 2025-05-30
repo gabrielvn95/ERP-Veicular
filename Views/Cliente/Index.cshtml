@@ -1,0 +1,56 @@
+﻿@model IEnumerable<GestVeicular.Models.Cliente>
+
+<link rel="stylesheet" href="~/css/PainelCliente.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+
+<div class="painel-container">
+    <div class="painel-header">
+        <h2 class="painel-title">Clientes</h2>
+        <a href="/Cliente/Cadastrar" class="painel-btn">
+            <i class="fas fa-user-plus"></i> Novo Cliente
+        </a>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert-custom alert-sucesso">
+            <i class="fas fa-check-circle"></i> @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    <div class="table-wrapper">
+        <table id="tabela-clientes" class="display painel-table" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th class="acoes-coluna">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cliente in Model)
+                {
+                    <tr>
+                        <td>@cliente.Nome</td>
+                        <td>@cliente.Cpf</td>
+                        <td>@cliente.Telefone</td>
+                        <td class="acoes-coluna">
+                            <a href="/Cliente/Editar/@cliente.IdCliente" class="btn-acao editar">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="/Cliente/ConfirmarDeletar/@cliente.IdCliente" class="btn-acao excluir">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="~/js/cliente.js"></script>

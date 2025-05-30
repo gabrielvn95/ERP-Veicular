@@ -1,6 +1,9 @@
 ﻿using GestVeicular.Data;
 using GestVeicular.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GestVeicular.Services.ClienteService
 {
@@ -15,7 +18,7 @@ namespace GestVeicular.Services.ClienteService
 
         public async Task<Response<Cliente>> AdicionarCliente(Cliente cliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
+            var response = new Response<Cliente>();
             try
             {
                 _context.Add(cliente);
@@ -23,91 +26,109 @@ namespace GestVeicular.Services.ClienteService
                 response.Status = true;
                 response.Mensagem = "Cliente adicionado com sucesso.";
                 response.Dados = cliente;
-                return response;
-
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return response;
             }
+            return response;
         }
 
-        public Task<Response<Cliente>> AtualizarCliente(Cliente cliente)
+        public async Task<Response<Cliente>> AtualizarCliente(Cliente cliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
+            var response = new Response<Cliente>();
             try
             {
                 _context.Update(cliente);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 response.Status = true;
                 response.Mensagem = "Cliente atualizado com sucesso.";
                 response.Dados = cliente;
-                return Task.FromResult(response);
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return Task.FromResult(response);
             }
+            return response;
         }
 
-        public Task<Response<Cliente>> BuscarClientePorId(int idCliente)
+        public async Task<Response<Cliente>> BuscarClientePorId(int idCliente)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Response<Cliente>> DeletarCliente(int idCliente)
-        {
-            Response<Cliente> response = new Response<Cliente>();
+            var response = new Response<Cliente>();
             try
             {
-                var cliente = _context.Clientes.Find(idCliente);
+                var cliente = await _context.Clientes.FindAsync(idCliente);
                 if (cliente == null)
                 {
                     response.Status = false;
                     response.Mensagem = "Cliente não encontrado.";
-                    return Task.FromResult(response);
+                }
+                else
+                {
+                    response.Status = true;
+                    response.Mensagem = "Cliente encontrado com sucesso.";
+                    response.Dados = cliente;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = $"Erro: {ex.Message}";
+            }
+            return response;
+        }
+
+        public async Task<Response<Cliente>> DeletarCliente(int idCliente)
+        {
+            var response = new Response<Cliente>();
+            try
+            {
+                var cliente = await _context.Clientes.FindAsync(idCliente);
+                if (cliente == null)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Cliente não encontrado.";
+                    return response;
                 }
                 _context.Clientes.Remove(cliente);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 response.Status = true;
                 response.Mensagem = "Cliente deletado com sucesso.";
-                return Task.FromResult(response);
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return Task.FromResult(response);
             }
+            return response;
         }
 
-        public Task<Response<Cliente>> Detalhes(int idCliente)
+        public async Task<Response<Cliente>> Detalhes(int idCliente)
         {
-            Response<Cliente> response = new Response<Cliente>();
+            var response = new Response<Cliente>();
             try
             {
-                var cliente = _context.Clientes.Find(idCliente);
+                var cliente = await _context.Clientes.FindAsync(idCliente);
                 if (cliente == null)
                 {
                     response.Status = false;
                     response.Mensagem = "Cliente não encontrado.";
-                    return Task.FromResult(response);
                 }
-                response.Status = true;
-                response.Mensagem = "Cliente encontrado com sucesso.";
-                response.Dados = cliente;
-                return Task.FromResult(response);
+                else
+                {
+                    response.Status = true;
+                    response.Mensagem = "Cliente encontrado com sucesso.";
+                    response.Dados = cliente;
+                }
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return Task.FromResult(response);
             }
+            return response;
         }
 
         public async Task<Response<List<Cliente>>> ListarClientes()
@@ -124,7 +145,6 @@ namespace GestVeicular.Services.ClienteService
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-
             }
             return response;
         }
