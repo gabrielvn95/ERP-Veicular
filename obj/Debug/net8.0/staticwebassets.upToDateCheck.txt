@@ -1,7 +1,8 @@
+wwwroot\css\EditarUsuario.css
+wwwroot\css\ExcluirUsuario.css
 wwwroot\css\layout.css
 wwwroot\css\Login.css
 wwwroot\css\PainelUsuario.css
-wwwroot\css\Register.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\Images\background-login.jpg
@@ -64,5 +65,4 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\EditarUsuario.css
-wwwroot\css\ExcluirUsuario.css
+wwwroot\css\Register.css

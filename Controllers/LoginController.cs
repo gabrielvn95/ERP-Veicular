@@ -35,7 +35,7 @@ namespace GestVeicular.Controllers
 
             if (usuarioLogado == null || usuarioLogado.TipoUsuario != Enums.TipoUsuario.Admin)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "PainelAdmin");
             }
 
             ViewBag.UsuarioLogado = usuarioLogado;
@@ -49,7 +49,7 @@ namespace GestVeicular.Controllers
 
             if (usuarioLogado == null || usuarioLogado.TipoUsuario != Enums.TipoUsuario.Admin)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "PainelAdmin");
             }
 
             ViewBag.UsuarioLogado = usuarioLogado;

@@ -10,15 +10,19 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cadastro - GVN</title>
-    <link rel="stylesheet" href="~/css/register.css" />
+    <link rel="stylesheet" href="~/css/Register.css" />
 </head>
 <body>
     <div class="register-page">
         <div class="register-container">
+
+            <a asp-controller="Usuario" asp-action="PainelAdmin" class="btn-voltar">
+                ← Voltar
+            </a>
+
             <div class="register-card">
-                <div class="logo">GVN</div>
                 <h2>Cadastro de Usuário</h2>
 
                 <form asp-action="Registrar" method="post" autocomplete="off" novalidate>

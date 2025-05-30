@@ -9,33 +9,26 @@
 
 .register-page {
     height: 100vh;
-    background: #1E1E2F;
+    background: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #F5F5F7;
+    color: #222;
+    position: relative;
 }
 
 .register-container {
-    background: #2A2A40;
-    padding: 48px 40px;
+    background: #d3d3d3;
+    padding: 48px 40px 64px 40px;
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     width: 420px;
-}
-
-.logo {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #8DB8FF;
-    margin-bottom: 20px;
-    letter-spacing: 1.5px;
+    position: relative;
 }
 
 .register-card h2 {
     text-align: center;
-    color: #AFC1FF;
+    color: #222;
     margin-bottom: 32px;
     font-weight: 600;
 }
@@ -56,23 +49,23 @@ form {
         padding: 14px 18px;
         border-radius: 12px;
         border: none;
-        background-color: #3C3C58;
-        color: #E0E0F0;
+        background-color: #b0b0b0;
+        color: #222;
         font-size: 1rem;
         transition: background-color 0.25s ease, box-shadow 0.25s ease;
     }
 
         .form-group input::placeholder {
-            color: #7D89B3;
+            color: #666;
             font-style: italic;
         }
 
         .form-group input:focus,
         .form-group select:focus {
-            background-color: #4A57A6;
-            box-shadow: 0 0 8px 2px #7E99FF;
+            background-color: #999999;
+            box-shadow: 0 0 8px 2px #777;
             outline: none;
-            color: white;
+            color: #000;
         }
 
     .form-group select {
@@ -80,7 +73,7 @@ form {
     }
 
 .text-danger {
-    color: #FF6B6B;
+    color: #d9534f;
     font-size: 0.8rem;
     margin-top: 6px;
 }
@@ -103,3 +96,19 @@ form {
         background: linear-gradient(90deg, #7399FF, #4466FF);
         box-shadow: 0 8px 18px rgba(83,114,255,0.85);
     }
+
+.btn-voltar {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1.5px solid #555;
+    color: #555;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
