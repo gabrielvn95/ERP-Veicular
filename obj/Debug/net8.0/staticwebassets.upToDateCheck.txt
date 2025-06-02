@@ -8,6 +8,7 @@ wwwroot\css\Register.css
 wwwroot\css\RegistrarCliente.css
 wwwroot\css\site.css
 wwwroot\css\Veiculo.css
+wwwroot\css\VeiculoRegister.css
 wwwroot\favicon.ico
 wwwroot\Images\background-login.jpg
 wwwroot\Images\gvn-logo.png

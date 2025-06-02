@@ -1,0 +1,123 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    color: #222;
+}
+
+.register-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-container {
+    background: #d9d9d9;
+    padding: 32px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 360px;
+    position: relative;
+}
+
+.register-card h2 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 24px;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: none;
+        background-color: #c0c0c0;
+        color: #222;
+        font-size: 0.95rem;
+        transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .form-group input::placeholder {
+            color: #555;
+            font-style: italic;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            background-color: #b0b0b0;
+            box-shadow: 0 0 5px 1px #888;
+            outline: none;
+            color: #000;
+        }
+
+    .form-group select {
+        appearance: none;
+    }
+
+.text-danger {
+    color: #d9534f;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #5777FF, #3355CC);
+    font-weight: 600;
+    font-size: 1rem;
+    color: #F0F4FF;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(53, 80, 255, 0.5);
+    transition: background 0.3s ease;
+}
+
+    .btn-submit:hover {
+        background: linear-gradient(90deg, #7399FF, #4466FF);
+        box-shadow: 0 6px 14px rgba(83, 114, 255, 0.7);
+    }
+
+.btn-voltar {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid #555;
+    color: #555;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .btn-voltar:hover {
+        background-color: #e0e0e0;
+        border-color: #333;
+        color: #333;
+    }
