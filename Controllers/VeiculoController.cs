@@ -3,7 +3,6 @@ using GestVeicular.Services.SessaoService;
 using GestVeicular.Services.VeiculoService;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace GestVeicular.Controllers
 {
     public class VeiculoController : Controller
@@ -30,12 +29,11 @@ namespace GestVeicular.Controllers
             if (!veiculos.Status || veiculos.Dados == null)
             {
                 TempData["MensagemErro"] = veiculos.Mensagem ?? "Erro ao carregar veículos.";
-                return View(new List<Veiculo>()); 
+                return View(new List<Veiculo>());
             }
 
             return View(veiculos.Dados);
         }
-
 
         [HttpGet]
         public IActionResult Cadastrar()
@@ -56,6 +54,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var veiculo = await _veiculoInterface.BuscarVeiculoPorId(id);
             return View(veiculo.Dados);
         }
@@ -68,8 +67,29 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var veiculo = await _veiculoInterface.BuscarVeiculoPorId(id);
             return View(veiculo.Dados);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletarPost(int idVeiculo)
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
+            var response = await _veiculoInterface.DeletarVeiculo(idVeiculo);
+            if (response.Status)
+            {
+                TempData["MensagemSucesso"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
+
+            TempData["MensagemErro"] = response.Mensagem;
+            return RedirectToAction("Deletar", new { id = idVeiculo });
         }
 
         [HttpGet]
@@ -93,6 +113,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             if (ModelState.IsValid)
             {
                 var response = await _veiculoInterface.AdicionarVeiculo(veiculo);
@@ -101,11 +122,10 @@ namespace GestVeicular.Controllers
                     TempData["MensagemSucesso"] = response.Mensagem;
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                }
+
+                TempData["MensagemErro"] = response.Mensagem;
             }
+
             return View(veiculo);
         }
 
@@ -117,6 +137,7 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             if (ModelState.IsValid)
             {
                 var response = await _veiculoInterface.AtualizarVeiculo(veiculo);
@@ -125,38 +146,11 @@ namespace GestVeicular.Controllers
                     TempData["MensagemSucesso"] = response.Mensagem;
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                }
-            }
-            return View(veiculo);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> Deletar(Veiculo veiculo)
-        {
-            var usuario = _sessaoInterface.BuscarSessao();
-            if (usuario == null)
-            {
-                return RedirectToAction("Login", "Login");
+                TempData["MensagemErro"] = response.Mensagem;
             }
-            if (ModelState.IsValid)
-            {
-                var response = await _veiculoInterface.DeletarVeiculo(veiculo.IdVeiculo);
-                if (response.Status)
-                {
-                    TempData["MensagemSucesso"] = response.Mensagem;
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                }
-            }
+
             return View(veiculo);
-        }
-       
         }
     }
-
+}

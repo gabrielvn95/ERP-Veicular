@@ -1,0 +1,49 @@
+﻿@model GestVeicular.Models.Veiculo
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Veiculo.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="painel-container">
+    <h2 class="painel-title"><i class="fas fa-trash-alt"></i> Confirmar Exclusão</h2>
+
+    <div class="alert-custom alert-erro">
+        Tem certeza que deseja excluir o veículo abaixo?
+    </div>
+
+    <div class="form-group">
+        <label><strong>Nome:</strong></label>
+        <p>@Model.NomeVeiculo</p>
+    </div>
+    <div class="form-group">
+        <label><strong>Placa:</strong></label>
+        <p>@Model.Placa</p>
+    </div>
+    <div class="form-group">
+        <label><strong>Marca:</strong></label>
+        <p>@Model.Marca</p>
+    </div>
+    <div class="form-group">
+        <label><strong>Modelo:</strong></label>
+        <p>@Model.Modelo</p>
+    </div>
+    <div class="form-group">
+        <label><strong>Ano:</strong></label>
+        <p>@Model.Ano</p>
+    </div>
+
+    <form asp-action="DeletarPost" method="post">
+        <input type="hidden" name="IdVeiculo" value="@Model.IdVeiculo" />
+        <div class="acoes-coluna" style="margin-top: 20px;">
+            <button type="submit" class="btn-acao excluir">
+                <i class="fas fa-trash"></i> Confirmar Exclusão
+            </button>
+            <a asp-action="Index" asp-controller="Veiculo" class="btn-acao editar">
+                <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
