@@ -24,9 +24,18 @@ namespace GestVeicular.Controllers
             {
                 return RedirectToAction("Login", "Login");
             }
+
             var veiculos = await _veiculoInterface.ListarVeiculos();
+
+            if (!veiculos.Status || veiculos.Dados == null)
+            {
+                TempData["MensagemErro"] = veiculos.Mensagem ?? "Erro ao carregar veículos.";
+                return View(new List<Veiculo>()); 
+            }
+
             return View(veiculos.Dados);
         }
+
 
         [HttpGet]
         public IActionResult Cadastrar()
