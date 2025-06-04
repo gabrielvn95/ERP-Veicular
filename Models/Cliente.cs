@@ -18,6 +18,5 @@ namespace GestVeicular.Models
         [Required(ErrorMessage = "O campo Telefone é obrigatório.")]
         [StringLength(15, ErrorMessage = "O campo Telefone deve ter no máximo 15 caracteres.")]
         public string Telefone { get; set; }
-
     }
 }

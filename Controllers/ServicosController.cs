@@ -1,45 +1,110 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Threading.Tasks;
 using GestVeicular.Models;
-using GestVeicular.Data;
 using GestVeicular.Services.SessaoService;
 using GestVeicular.Services.ServicosService;
+using GestVeicular.Services.ClienteService;
+using GestVeicular.Services.VeiculoService;
 
 namespace GestVeicular.Controllers
 {
-
     public class ServicosController : Controller
     {
         private readonly ISessaoInterface _sessaoInterface;
         private readonly IServicosInterface _servicosInterface;
+        private readonly IClienteInterface _clienteInterface;
+        private readonly IVeiculoInterface _veiculoInterface;
 
-        public ServicosController(ISessaoInterface sessaoInterface, IServicosInterface servicosInterface)
+        public ServicosController(
+            ISessaoInterface sessaoInterface,
+            IServicosInterface servicosInterface,
+            IClienteInterface clienteInterface,
+            IVeiculoInterface veiculoInterface)
         {
             _sessaoInterface = sessaoInterface;
             _servicosInterface = servicosInterface;
+            _clienteInterface = clienteInterface;
+            _veiculoInterface = veiculoInterface;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
-            {
                 return RedirectToAction("Login", "Login");
-            }
-            var servicos = await _servicosInterface.BuscarTodosServicos();
-            return View(servicos.Dados);
 
+            var response = await _servicosInterface.BuscarTodosServicos();
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                return View();
+            }
+
+            return View(response.Dados);
         }
 
         [HttpGet]
-        public IActionResult Cadastrar()
+        public async Task<IActionResult> Cadastrar()
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
-            {
                 return RedirectToAction("Login", "Login");
-            }
+
+            var clientesResponse = await _clienteInterface.ListarClientes();
+            var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+            ViewBag.Clientes = clientesResponse.Dados
+                .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                .ToList();
+            ViewBag.Veiculos = veiculosResponse.Dados
+                .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                .ToList();
+
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Cadastrar(Servicos servico)
+        {
+            if (!ModelState.IsValid)
+            {
+                var clientesResponse = await _clienteInterface.ListarClientes();
+                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+                ViewBag.Clientes = clientesResponse.Dados
+                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                    .ToList();
+                ViewBag.Veiculos = veiculosResponse.Dados
+                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                    .ToList();
+
+                return View(servico);
+            }
+
+            var response = await _servicosInterface.AdicionarServico(servico);
+
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+
+                var clientesResponse = await _clienteInterface.ListarClientes();
+                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+                ViewBag.Clientes = clientesResponse.Dados
+                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                    .ToList();
+                ViewBag.Veiculos = veiculosResponse.Dados
+                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                    .ToList();
+
+                return View(servico);
+            }
+
+            TempData["MensagemSucesso"] = response.Mensagem;
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -47,62 +112,21 @@ namespace GestVeicular.Controllers
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
-            {
                 return RedirectToAction("Login", "Login");
-            }
+
             var servico = await _servicosInterface.BuscarServicoPorId(id);
+
+            var clientesResponse = await _clienteInterface.ListarClientes();
+            var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+            ViewBag.Clientes = clientesResponse.Dados
+                .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                .ToList();
+            ViewBag.Veiculos = veiculosResponse.Dados
+                .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                .ToList();
+
             return View(servico.Dados);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Deletar(int id)
-        {
-            var usuario = _sessaoInterface.BuscarSessao();
-            if (usuario == null)
-            {
-                return RedirectToAction("Login", "Login");
-            }
-            var servico = await _servicosInterface.BuscarServicoPorId(id);
-            return View(servico.Dados);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Detalhes(int id)
-        {
-            var response = await _servicosInterface.BuscarServicoPorId(id);
-            if (!response.Status)
-            {
-                TempData["MensagemErro"] = response.Mensagem;
-                return RedirectToAction("Index");
-            }
-
-            return View(response.Dados);
-
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Cadastrar(Servicos servico)
-        {
-            var usuario = _sessaoInterface.BuscarSessao();
-            if (usuario == null)
-            {
-                return RedirectToAction("Login", "Login");
-            }
-            if (ModelState.IsValid)
-            {
-                var response = await _servicosInterface.AdicionarServico(servico);
-                if (response.Status)
-                {
-                    TempData["MensagemSucesso"] = response.Mensagem;
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                    return View(servico);
-                }
-            }
-            return View(servico);
         }
 
         [HttpPost]
@@ -110,24 +134,44 @@ namespace GestVeicular.Controllers
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
-            {
                 return RedirectToAction("Login", "Login");
-            }
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
-                var response = await _servicosInterface.AtualizarServico(servico);
-                if (response.Status)
-                {
-                    TempData["MensagemSucesso"] = response.Mensagem;
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                    return View(servico);
-                }
+                var clientesResponse = await _clienteInterface.ListarClientes();
+                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+                ViewBag.Clientes = clientesResponse.Dados
+                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                    .ToList();
+                ViewBag.Veiculos = veiculosResponse.Dados
+                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                    .ToList();
+
+                return View(servico);
             }
-            return View(servico);
+
+            var response = await _servicosInterface.AtualizarServico(servico);
+
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                return View(servico);
+            }
+
+            TempData["MensagemSucesso"] = response.Mensagem;
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Deletar(int id)
+        {
+            var usuario = _sessaoInterface.BuscarSessao();
+            if (usuario == null)
+                return RedirectToAction("Login", "Login");
+
+            var servico = await _servicosInterface.BuscarServicoPorId(id);
+            return View(servico.Dados);
         }
 
         [HttpPost]
@@ -135,9 +179,8 @@ namespace GestVeicular.Controllers
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
-            {
                 return RedirectToAction("Login", "Login");
-            }
+
             if (ModelState.IsValid)
             {
                 var response = await _servicosInterface.DeletarServico(servico.IdServico);
@@ -152,8 +195,21 @@ namespace GestVeicular.Controllers
                     return View(servico);
                 }
             }
-            return View(servico);
 
+            return View(servico);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detalhes(int id)
+        {
+            var response = await _servicosInterface.BuscarServicoPorId(id);
+            if (!response.Status)
+            {
+                TempData["MensagemErro"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
+
+            return View(response.Dados);
         }
     }
 }

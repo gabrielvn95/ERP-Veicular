@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
 
 namespace GestVeicular.Models
 {
@@ -26,6 +25,5 @@ namespace GestVeicular.Models
         [Required(ErrorMessage = "O campo Ano é obrigatório.")]
         [Range(1900, 2100, ErrorMessage = "O campo Ano deve estar entre 1900 e 2100.")]
         public int Ano { get; set; }
-
     }
 }
