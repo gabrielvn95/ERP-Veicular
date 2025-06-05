@@ -108,7 +108,6 @@ namespace GestVeicular.Controllers
             }
 
             await PreencherViewBagsAsync();
-
             return View(servicoResponse.Dados);
         }
 
@@ -144,34 +143,46 @@ namespace GestVeicular.Controllers
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            var servico = await _servicosInterface.BuscarServicoPorId(id);
-            return View(servico.Dados);
+            var servicoResponse = await _servicosInterface.BuscarServicoPorId(id);
+            if (!servicoResponse.Status || servicoResponse.Dados == null)
+            {
+                TempData["MensagemErro"] = servicoResponse.Mensagem;
+                return RedirectToAction("Index");
+            }
+
+            var servico = servicoResponse.Dados;
+            servico.Cliente = (await _clienteInterface.BuscarClientePorId(servico.ClienteId))?.Dados;
+            servico.Veiculo = (await _veiculoInterface.BuscarVeiculoPorId(servico.VeiculoId))?.Dados;
+
+            return View(servico);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Deletar(Servicos servico)
+        [HttpPost, ActionName("Deletar")]
+        public async Task<IActionResult> DeletarPost(int id)
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            if (ModelState.IsValid)
+            var servicoResponse = await _servicosInterface.BuscarServicoPorId(id);
+            if (!servicoResponse.Status || servicoResponse.Dados == null)
             {
-                var response = await _servicosInterface.DeletarServico(servico.IdServico);
-                if (response.Status)
-                {
-                    TempData["MensagemSucesso"] = response.Mensagem;
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = response.Mensagem;
-                    return View(servico);
-                }
+                TempData["MensagemErro"] = servicoResponse.Mensagem ?? "Serviço não encontrado.";
+                return RedirectToAction("Index");
             }
 
-            return View(servico);
+            var response = await _servicosInterface.DeletarServico(id);
+            if (response.Status)
+            {
+                TempData["MensagemSucesso"] = response.Mensagem;
+                return RedirectToAction("Index");
+            }
+
+            TempData["MensagemErro"] = response.Mensagem ?? "Erro ao tentar excluir o serviço.";
+            return RedirectToAction("Index");
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> Detalhes(int id)

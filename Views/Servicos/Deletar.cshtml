@@ -1,0 +1,63 @@
+﻿@model GestVeicular.Models.Servicos
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Veiculo.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="painel-container">
+    <h2 class="painel-title"><i class="fas fa-trash-alt"></i> Confirmar Exclusão</h2>
+
+    <div class="alert-custom alert-erro">
+        Tem certeza que deseja excluir o serviço abaixo?
+    </div>
+
+    <div class="form-group">
+        <label><strong>Nome do cliente:</strong></label>
+        <div>@Model.Cliente?.Nome</div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Veículo:</strong></label>
+        <div>@Model.Veiculo?.NomeVeiculo</div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Placa:</strong></label>
+        <div>@Model.Veiculo?.Placa </div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Descrição:</strong></label>
+        <div>@Model.DescricaoServico</div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Início do serviço:</strong></label>
+        <div>@Model.DataServico.ToString("dd/MM/yyyy")</div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Valor:</strong></label>
+        <div>@Model.ValorServico.ToString("C")</div>
+    </div>
+
+    <div class="form-group">
+        <label><strong>Status:</strong></label>
+        <div>@Model.Status</div>
+    </div>
+
+    <form asp-controller="Servicos" asp-action="Deletar" method="post">
+        <input type="hidden" name="id" value="@Model.IdServico" />
+        <div class="acoes-coluna" style="margin-top: 20px;">
+            <button type="submit" class="btn-acao excluir">
+                <i class="fas fa-trash"></i> Confirmar Exclusão
+            </button>
+            <a asp-action="Index" asp-controller="Servicos" class="btn-acao editar">
+                <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
