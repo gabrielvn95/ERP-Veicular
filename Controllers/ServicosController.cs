@@ -29,6 +29,20 @@ namespace GestVeicular.Controllers
             _veiculoInterface = veiculoInterface;
         }
 
+        private async Task PreencherViewBagsAsync()
+        {
+            var clientesResponse = await _clienteInterface.ListarClientes();
+            var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+
+            ViewBag.Clientes = (clientesResponse.Dados ?? new List<Cliente>())
+                .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
+                .ToList();
+
+            ViewBag.Veiculos = (veiculosResponse.Dados ?? new List<Veiculo>())
+                .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
+                .ToList();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -53,16 +67,7 @@ namespace GestVeicular.Controllers
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            var clientesResponse = await _clienteInterface.ListarClientes();
-            var veiculosResponse = await _veiculoInterface.ListarVeiculos();
-
-            ViewBag.Clientes = clientesResponse.Dados
-                .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
-                .ToList();
-            ViewBag.Veiculos = veiculosResponse.Dados
-                .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
-                .ToList();
-
+            await PreencherViewBagsAsync();
             return View();
         }
 
@@ -71,16 +76,7 @@ namespace GestVeicular.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var clientesResponse = await _clienteInterface.ListarClientes();
-                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
-
-                ViewBag.Clientes = clientesResponse.Dados
-                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
-                    .ToList();
-                ViewBag.Veiculos = veiculosResponse.Dados
-                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
-                    .ToList();
-
+                await PreencherViewBagsAsync();
                 return View(servico);
             }
 
@@ -89,17 +85,7 @@ namespace GestVeicular.Controllers
             if (!response.Status)
             {
                 TempData["MensagemErro"] = response.Mensagem;
-
-                var clientesResponse = await _clienteInterface.ListarClientes();
-                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
-
-                ViewBag.Clientes = clientesResponse.Dados
-                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
-                    .ToList();
-                ViewBag.Veiculos = veiculosResponse.Dados
-                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
-                    .ToList();
-
+                await PreencherViewBagsAsync();
                 return View(servico);
             }
 
@@ -114,19 +100,16 @@ namespace GestVeicular.Controllers
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            var servico = await _servicosInterface.BuscarServicoPorId(id);
+            var servicoResponse = await _servicosInterface.BuscarServicoPorId(id);
+            if (!servicoResponse.Status)
+            {
+                TempData["MensagemErro"] = servicoResponse.Mensagem;
+                return RedirectToAction("Index");
+            }
 
-            var clientesResponse = await _clienteInterface.ListarClientes();
-            var veiculosResponse = await _veiculoInterface.ListarVeiculos();
+            await PreencherViewBagsAsync();
 
-            ViewBag.Clientes = clientesResponse.Dados
-                .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
-                .ToList();
-            ViewBag.Veiculos = veiculosResponse.Dados
-                .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
-                .ToList();
-
-            return View(servico.Dados);
+            return View(servicoResponse.Dados);
         }
 
         [HttpPost]
@@ -138,24 +121,15 @@ namespace GestVeicular.Controllers
 
             if (!ModelState.IsValid)
             {
-                var clientesResponse = await _clienteInterface.ListarClientes();
-                var veiculosResponse = await _veiculoInterface.ListarVeiculos();
-
-                ViewBag.Clientes = clientesResponse.Dados
-                    .Select(c => new SelectListItem { Value = c.IdCliente.ToString(), Text = c.Nome })
-                    .ToList();
-                ViewBag.Veiculos = veiculosResponse.Dados
-                    .Select(v => new SelectListItem { Value = v.IdVeiculo.ToString(), Text = v.NomeVeiculo + " - " + v.Placa })
-                    .ToList();
-
+                await PreencherViewBagsAsync();
                 return View(servico);
             }
 
             var response = await _servicosInterface.AtualizarServico(servico);
-
             if (!response.Status)
             {
-                TempData["MensagemErro"] = response.Mensagem;
+                TempData["MensagemErro"] = response.Mensagem ?? "Erro ao atualizar o serviço.";
+                await PreencherViewBagsAsync();
                 return View(servico);
             }
 

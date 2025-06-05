@@ -49,13 +49,13 @@
                         <td>@s.ValorServico.ToString("C")</td>
                         <td>@s.Status</td>
                         <td class="acoes-coluna">
-                            <a asp-action="Editar" asp-controller="Veiculo" asp-route-id="@s.IdServico" class="btn-acao editar">
+                            <a asp-action="Editar" asp-controller="Servicos" asp-route-id="@s.IdServico" class="btn-acao editar">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <a asp-action="Deletar" asp-controller="Veiculo" asp-route-id="@s.IdServico" class="btn-acao excluir">
+                            <a asp-action="Deletar" asp-controller="Servicos" asp-route-id="@s.IdServico" class="btn-acao excluir">
                                 <i class="fas fa-trash-alt"></i> Excluir
                             </a>
-                            <a asp-action="Detalhes" asp-controller="Veiculo" asp-route-id="@s.IdServico" class="btn-acao detalhes">
+                            <a asp-action="Detalhes" asp-controller="Servicos" asp-route-id="@s.IdServico" class="btn-acao detalhes">
                                 <i class="fas fa-eye"></i> Detalhes
                             </a>
                         </td>
