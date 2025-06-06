@@ -11,7 +11,11 @@ namespace GestVeicular.Services.ServicosService
     public class ServicosService : IServicosInterface
     {
         private readonly ApplicationDbContext _context;
-        public ServicosService(ApplicationDbContext context) => _context = context;
+        public ServicosService(ApplicationDbContext context)
+
+        {
+            _context = context;
+        }
 
         public async Task<Response<Servicos>> AdicionarServico(Servicos servico)
         {

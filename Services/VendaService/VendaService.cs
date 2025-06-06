@@ -16,10 +16,14 @@ namespace GestVeicular.Services.VendaService
 
         public async Task<Response<Venda>> AtualizarStatusVenda(int idVenda, StatusServicos novoStatus)
         {
-            Response<Venda> response = new Response<Venda>();
+            var response = new Response<Venda>();
             try
             {
-                var vendaExistente = await _context.Vendas.FindAsync(idVenda);
+                var vendaExistente = await _context.Vendas
+                    .Include(s => s.Cliente)
+                    .Include(s => s.Veiculo)
+                    .FirstOrDefaultAsync(s => s.IdVenda == idVenda);
+
                 if (vendaExistente == null)
                 {
                     response.Status = false;
@@ -27,9 +31,8 @@ namespace GestVeicular.Services.VendaService
                     return response;
                 }
 
-          
                 vendaExistente.Status = novoStatus;
-                vendaExistente.DataUltimaAtualizacao = DateTime.Now; 
+                vendaExistente.DataUltimaAtualizacao = DateTime.Now;
 
                 _context.Vendas.Update(vendaExistente);
                 await _context.SaveChangesAsync();
@@ -37,14 +40,13 @@ namespace GestVeicular.Services.VendaService
                 response.Status = true;
                 response.Mensagem = "Status da venda atualizado com sucesso.";
                 response.Dados = vendaExistente;
-                return response;
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return response;
             }
+            return response;
         }
 
 
@@ -53,56 +55,38 @@ namespace GestVeicular.Services.VendaService
             Response<Venda> response = new Response<Venda>();
             try
             {
-                var vendaExistente = await _context.Vendas.FindAsync(venda.IdVenda);
-                if (vendaExistente == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Venda não encontrada.";
-                    return response;
-                }
-                vendaExistente.Cliente = venda.Cliente;
-                vendaExistente.Veiculo = venda.Veiculo;
-                vendaExistente.ValorDaVenda = venda.ValorDaVenda;
-                _context.Update(vendaExistente);
+                _context.Vendas.Update(venda);
                 await _context.SaveChangesAsync();
                 response.Status = true;
                 response.Mensagem = "Venda atualizada com sucesso.";
-                response.Dados = vendaExistente;
-                return response;
+                response.Dados = venda;
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return response;
             }
+            return response;
         }
 
-
-        public async Task<Response<Venda>> CriarVenda(Venda venda)
+      
+        public async Task<Response<Venda>> AdicionarVenda(Venda venda)
         {
-            Response<Venda> response = new Response<Venda>();
+            var response = new Response<Venda>();
             try
             {
-                if(venda.Cliente == null || venda.Veiculo == null)
-                {
-                    response.Status = false;
-                    response.Mensagem = "Venda deve ter um cliente e um veículo.";
-                    return response;
-                }
                 await _context.AddAsync(venda);
                 await _context.SaveChangesAsync();
                 response.Status = true;
-                response.Mensagem = "Venda criada com sucesso.";
+                response.Mensagem = "Venda adicionado com sucesso.";
                 response.Dados = venda;
-                return response;
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return response;
             }
+            return response;
         }
 
         public async Task<Response<Venda>> DeletarVenda(int idVenda)
@@ -130,10 +114,10 @@ namespace GestVeicular.Services.VendaService
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
                 return response;
-
-
             }
            }
+
+       
 
         public async Task<Response<Venda>> Detalhes(int idVenda)
         {
@@ -162,11 +146,15 @@ namespace GestVeicular.Services.VendaService
 
         public async Task<Response<List<Venda>>> ListarVendas()
         {
-            Response<List<Venda>> response = new Response<List<Venda>>();
+            var response = new Response<List<Venda>>();
             try
             {
-                var vendas = await _context.Vendas.ToListAsync();
-                if (vendas == null || vendas.Count == 0)
+                var venda = await _context.Vendas
+                    .Include(s => s.Cliente)
+                    .Include(s => s.Veiculo)
+                    .ToListAsync();
+
+                if (venda == null || venda.Count == 0)
                 {
                     response.Status = false;
                     response.Mensagem = "Nenhuma venda encontrada.";
@@ -174,15 +162,42 @@ namespace GestVeicular.Services.VendaService
                 }
                 response.Status = true;
                 response.Mensagem = "Vendas encontradas com sucesso.";
-                response.Dados = vendas;
-                return response;
+                response.Dados = venda;
             }
             catch (Exception ex)
             {
                 response.Status = false;
                 response.Mensagem = $"Erro: {ex.Message}";
-                return response;
             }
+            return response;
+        }
+
+        public async Task<Response<Venda>> BuscarVendaPorId(int idVenda)
+        {
+            var response = new Response<Venda>();
+            try
+            {
+                var venda = await _context.Vendas
+                    .Include(s => s.Cliente)
+                    .Include(s => s.Veiculo)
+                    .FirstOrDefaultAsync(s => s.IdVenda == idVenda);
+
+                if (venda == null)
+                {
+                    response.Status = false;
+                    response.Mensagem = "Vendas não encontrada.";
+                    return response;
+                }
+                response.Status = true;
+                response.Mensagem = "Vendas encontrada com sucesso.";
+                response.Dados = venda;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Mensagem = $"Erro: {ex.Message}";
+            }
+            return response;
         }
     }
 }
