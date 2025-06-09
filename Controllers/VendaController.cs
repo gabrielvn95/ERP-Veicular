@@ -14,15 +14,17 @@ namespace GestVeicular.Controllers
         private readonly ISessaoInterface _sessaoInterface;
         private readonly IClienteInterface _clienteInterface;
         private readonly IVeiculoInterface _veiculoInterface;
-        public VendaController(IVendaInterface vendaInterface,
-                              ISessaoInterface sessaoInterface,
-                              IClienteInterface clienteInterface,
-                              IVeiculoInterface veiculoInterface)
+
+        public VendaController(
+            IVendaInterface vendaInterface,
+            ISessaoInterface sessaoInterface,
+            IClienteInterface clienteInterface,
+            IVeiculoInterface veiculoInterface)
         {
             _vendaInterface = vendaInterface;
             _sessaoInterface = sessaoInterface;
             _clienteInterface = clienteInterface;
-            _veiculoInterface = veiculoInterface;   
+            _veiculoInterface = veiculoInterface;
         }
 
         private async Task PreencherViewBagsAsync()
@@ -50,7 +52,7 @@ namespace GestVeicular.Controllers
             if (!response.Status)
             {
                 TempData["MensagemErro"] = response.Mensagem;
-                return View();
+                return View(new List<Venda>());
             }
 
             return View(response.Dados);
@@ -146,11 +148,11 @@ namespace GestVeicular.Controllers
                 return RedirectToAction("Index");
             }
 
-            var vendas = vendaResponse.Dados;
-            vendas.Cliente = (await _clienteInterface.BuscarClientePorId(vendas.ClienteId))?.Dados;
-            vendas.Veiculo = (await _veiculoInterface.BuscarVeiculoPorId(vendas.VeiculoId))?.Dados;
+            var venda = vendaResponse.Dados;
+            venda.Cliente = (await _clienteInterface.BuscarClientePorId(venda.ClienteId))?.Dados;
+            venda.Veiculo = (await _veiculoInterface.BuscarVeiculoPorId(venda.VeiculoId))?.Dados;
 
-            return View(vendas);
+            return View(venda);
         }
 
         [HttpPost, ActionName("Deletar")]
@@ -160,10 +162,10 @@ namespace GestVeicular.Controllers
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            var servicoResponse = await _vendaInterface.BuscarVendaPorId(id);
-            if (!servicoResponse.Status || servicoResponse.Dados == null)
+            var vendaResponse = await _vendaInterface.BuscarVendaPorId(id);
+            if (!vendaResponse.Status || vendaResponse.Dados == null)
             {
-                TempData["MensagemErro"] = servicoResponse.Mensagem ?? "Venda não encontrado.";
+                TempData["MensagemErro"] = vendaResponse.Mensagem ?? "Venda não encontrada.";
                 return RedirectToAction("Index");
             }
 
@@ -177,8 +179,6 @@ namespace GestVeicular.Controllers
             TempData["MensagemErro"] = response.Mensagem ?? "Erro ao tentar excluir a venda.";
             return RedirectToAction("Index");
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> Detalhes(int id)
@@ -194,7 +194,3 @@ namespace GestVeicular.Controllers
         }
     }
 }
-
-
-    
-

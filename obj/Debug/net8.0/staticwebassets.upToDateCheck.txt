@@ -18,6 +18,7 @@ wwwroot\js\cliente.js
 wwwroot\js\Servicos.js
 wwwroot\js\site.js
 wwwroot\js\veiculo.js
+wwwroot\js\venda.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css

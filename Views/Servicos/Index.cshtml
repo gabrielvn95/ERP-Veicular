@@ -39,7 +39,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var s in Model)
+                @if (Model != null && Model.Any())
+                {
+                foreach (var s in Model)
                 {
                     <tr>
                         <td>@s.Cliente?.Nome</td>
@@ -60,6 +62,7 @@
                             </a>
                         </td>
                     </tr>
+                }
                 }
             </tbody>
         </table>

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GestVeicular.Models.Venda>
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Servico/Servicos.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="painel-container">
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert-custom alert-erro">@TempData["MensagemErro"]</div>
+    }
+    else if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert-custom alert-sucesso">@TempData["MensagemSucesso"]</div>
+    }
+
+    <div class="painel-header">
+        <h2 class="painel-title"><i class="fas fa-tools"></i> Painel de Vendas</h2>
+        <a asp-action="Cadastrar" asp-controller="Venda" class="btn-login painel-btn">
+            <i class="fas fa-plus"></i> Nova Venda
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="VendaVeiculoTable" class="painel-table display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Veículo</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var s in Model)
+                    {
+                        <tr>
+                            <td>@s.Cliente?.Nome</td>
+                            <td>@s.Veiculo?.NomeVeiculo</td>
+                            <td>@s.Status</td>
+                            <td>@s.DataUltimaAtualizacao.ToString("dd/MM/yyyy")</td>
+                            <td>@s.ValorDaVenda.ToString("C")</td>
+                            <td class="acoes-coluna">
+                                <a asp-action="Editar" asp-controller="Venda" asp-route-id="@s.IdVenda" class="btn-acao editar">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a asp-action="Deletar" asp-controller="Venda" asp-route-id="@s.IdVenda" class="btn-acao excluir">
+                                    <i class="fas fa-trash-alt"></i> Excluir
+                                </a>
+                                <a asp-action="Detalhes" asp-controller="Venda" asp-route-id="@s.IdVenda" class="btn-acao detalhes">
+                                    <i class="fas fa-eye"></i> Detalhes
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="/js/venda.js"></script>
+}
