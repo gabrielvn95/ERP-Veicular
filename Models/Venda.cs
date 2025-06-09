@@ -1,5 +1,7 @@
 ﻿using GestVeicular.Enums;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestVeicular.Models
 {
@@ -8,7 +10,18 @@ namespace GestVeicular.Models
         [Key]
         public int IdVenda { get; set; }
 
+        public int ClienteId { get; set; }
+
+        [ValidateNever]
+        [ForeignKey(nameof(ClienteId))]
         public Cliente Cliente { get; set; }
+
+        [Required(ErrorMessage = "Selecione um veículo.")]
+        [Display(Name = "Veículo")]
+        public int VeiculoId { get; set; }
+
+        [ValidateNever]
+        [ForeignKey(nameof(VeiculoId))]
         public Veiculo Veiculo { get; set; }
 
         [Required(ErrorMessage = "O campo Valor da venda é obrigatório.")]
