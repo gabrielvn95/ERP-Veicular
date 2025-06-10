@@ -1,0 +1,66 @@
+﻿@model GestVeicular.Models.Venda;
+
+@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/registerServicos.css" />
+
+<div class="register-page">
+    <div class="register-container register-card">
+        <a asp-action="Index" class="btn-voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+
+        <h2><i class="fas fa-plus-circle"></i> Cadastro da venda</h2>
+
+        @if (TempData["MensagemErro"] != null)
+        {
+            <div class="alert-custom alert-erro">
+                @TempData["MensagemErro"]
+            </div>
+        }
+
+        <form asp-controller="Venda" asp-action="Cadastrar" method="post">
+            <div class="form-group">
+                <label asp-for="ClienteId"></label>
+                <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.Clientes">
+                    <option value="">-- Selecione um cliente --</option>
+                </select>
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VeiculoId"></label>
+                <select asp-for="VeiculoId" class="form-control" asp-items="ViewBag.Veiculos">
+                    <option value="">-- Selecione um veículo --</option>
+                </select>
+                <span asp-validation-for="VeiculoId" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input asp-for="ValorDaVenda" placeholder="Valor da venda" class="form-control" />
+                <span asp-validation-for="ValorDaVenda" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="DataUltimaAtualizacao" type="date" class="form-control" />
+                <span asp-validation-for="DataUltimaAtualizacao" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<GestVeicular.Enums.StatusServicos>()">
+                    <option value="">Selecione o Status</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
