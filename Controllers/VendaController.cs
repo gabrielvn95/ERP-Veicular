@@ -110,7 +110,7 @@ namespace GestVeicular.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar(Venda vendas)
+        public async Task<IActionResult> Editar(Venda venda)
         {
             var usuario = _sessaoInterface.BuscarSessao();
             if (usuario == null)
@@ -119,15 +119,15 @@ namespace GestVeicular.Controllers
             if (!ModelState.IsValid)
             {
                 await PreencherViewBagsAsync();
-                return View(vendas);
+                return View(venda);
             }
 
-            var response = await _vendaInterface.AtualizarVenda(vendas);
+            var response = await _vendaInterface.AtualizarVenda(venda);
             if (!response.Status)
             {
                 TempData["MensagemErro"] = response.Mensagem ?? "Erro ao atualizar a venda.";
                 await PreencherViewBagsAsync();
-                return View(vendas);
+                return View(venda);
             }
 
             TempData["MensagemSucesso"] = response.Mensagem;
@@ -141,10 +141,10 @@ namespace GestVeicular.Controllers
             if (usuario == null)
                 return RedirectToAction("Login", "Login");
 
-            var vendaResponse = await _vendaInterface.DeletarVenda(id);
+            var vendaResponse = await _vendaInterface.BuscarVendaPorId(id); 
             if (!vendaResponse.Status || vendaResponse.Dados == null)
             {
-                TempData["MensagemErro"] = vendaResponse.Mensagem;
+                TempData["MensagemErro"] = vendaResponse.Mensagem ?? "Venda não encontrada.";
                 return RedirectToAction("Index");
             }
 
@@ -154,6 +154,7 @@ namespace GestVeicular.Controllers
 
             return View(venda);
         }
+
 
         [HttpPost, ActionName("Deletar")]
         public async Task<IActionResult> DeletarPost(int id)

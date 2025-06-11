@@ -44,7 +44,7 @@ namespace GestVeicular.Services.VendaService
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
+                response.Mensagem = $"Erro ao atualizar status: {ex.Message}";
             }
             return response;
         }
@@ -56,6 +56,7 @@ namespace GestVeicular.Services.VendaService
             {
                 _context.Vendas.Update(venda);
                 await _context.SaveChangesAsync();
+
                 response.Status = true;
                 response.Mensagem = "Venda atualizada com sucesso.";
                 response.Dados = venda;
@@ -63,7 +64,7 @@ namespace GestVeicular.Services.VendaService
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
+                response.Mensagem = $"Erro ao atualizar venda: {ex.Message}";
             }
             return response;
         }
@@ -75,6 +76,7 @@ namespace GestVeicular.Services.VendaService
             {
                 await _context.Vendas.AddAsync(venda);
                 await _context.SaveChangesAsync();
+
                 response.Status = true;
                 response.Mensagem = "Venda adicionada com sucesso.";
                 response.Dados = venda;
@@ -82,7 +84,7 @@ namespace GestVeicular.Services.VendaService
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
+                response.Mensagem = $"Erro ao adicionar venda: {ex.Message}";
             }
             return response;
         }
@@ -99,19 +101,20 @@ namespace GestVeicular.Services.VendaService
                     response.Mensagem = "Venda não encontrada.";
                     return response;
                 }
+
                 _context.Vendas.Remove(vendaEncontrada);
                 await _context.SaveChangesAsync();
+
                 response.Status = true;
                 response.Mensagem = "Venda deletada com sucesso.";
                 response.Dados = vendaEncontrada;
-                return response;
             }
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
-                return response;
+                response.Mensagem = $"Erro ao deletar venda: {ex.Message}";
             }
+            return response;
         }
 
         public async Task<Response<Venda>> BuscarVendaPorId(int idVenda)
@@ -130,6 +133,7 @@ namespace GestVeicular.Services.VendaService
                     response.Mensagem = "Venda não encontrada.";
                     return response;
                 }
+
                 response.Status = true;
                 response.Mensagem = "Venda encontrada com sucesso.";
                 response.Dados = venda;
@@ -137,7 +141,7 @@ namespace GestVeicular.Services.VendaService
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
+                response.Mensagem = $"Erro ao buscar venda: {ex.Message}";
             }
             return response;
         }
@@ -152,27 +156,28 @@ namespace GestVeicular.Services.VendaService
                     .Include(s => s.Veiculo)
                     .ToListAsync();
 
-                if (vendas == null || vendas.Count == 0)
+                if (vendas.Count == 0)
                 {
                     response.Status = false;
                     response.Mensagem = "Nenhuma venda encontrada.";
                     return response;
                 }
+
                 response.Status = true;
-                response.Mensagem = "Vendas encontradas com sucesso.";
+                response.Mensagem = "Vendas listadas com sucesso.";
                 response.Dados = vendas;
             }
             catch (Exception ex)
             {
                 response.Status = false;
-                response.Mensagem = $"Erro: {ex.Message}";
+                response.Mensagem = $"Erro ao listar vendas: {ex.Message}";
             }
             return response;
         }
 
         public async Task<Response<Venda>> Detalhes(int idVenda)
         {
-            return await BuscarVendaPorId(idVenda);
+            return await BuscarVendaPorId(idVenda); 
         }
     }
 }
