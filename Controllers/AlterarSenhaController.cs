@@ -14,7 +14,9 @@ namespace GestVeicular.Controllers
                 _sessaoInterface = sessaoInterface;
                 _usuarioRepositorio = usuarioRepositorio;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public IActionResult Alterar()
         {
             return View();
         }
@@ -31,15 +33,15 @@ namespace GestVeicular.Controllers
                 {
                     _usuarioRepositorio.AlterarSenha(alterarSenha);
                     TempData["MensagemSucesso"] = "Senha alterada com sucesso!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Alterar");
                 }
-                return View("Index", alterarSenha);
+                return View("Alterar", alterarSenha);
 
             }
             catch (Exception ex)
             {
                 TempData["MensagemErro"] = "Erro ao alterar a senha: " + ex.Message;
-                return RedirectToAction("Index");
+                return RedirectToAction("Alterar");
             }
 
         }

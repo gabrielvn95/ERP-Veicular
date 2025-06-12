@@ -1,0 +1,41 @@
+﻿@model GestVeicular.Models.AlterarSenha
+
+@{
+    ViewData["Title"] = "Alterar Senha";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/RegistrarCliente.css" />
+
+<div class="register-page">
+    <div class="register-container">
+        <a asp-controller="Home" asp-action="Index" class="btn-voltar">← Voltar</a>
+
+        <div class="register-card">
+            <h2>Alterar Senha</h2>
+
+            <form asp-controller="AlterarSenha" asp-action="Alterar" method="post" autocomplete="off" novalidate>
+                <div class="form-group">
+                    <input asp-for="SenhaAtual" placeholder="Senha Atual" type="password" />
+                    <span asp-validation-for="SenhaAtual" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="NovaSenha" placeholder="Nova senha" maxlength="15" type="password" />
+                    <span asp-validation-for="NovaSenha" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="ConfirmarSenha" placeholder="Confirme nova senha" maxlength="15" type="password" />
+                    <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn-submit">Alterar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
