@@ -36,34 +36,49 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
                         </li>
                         @if (usuarioLogado != null && usuarioLogado.TipoUsuario == TipoUsuario.Admin)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="PainelAdmin">Usuários</a>
+                                <a class="nav-link" asp-area="" asp-controller="Usuario" asp-action="PainelAdmin">
+                                    <i class="fas fa-users-cog"></i> Usuários
+                                </a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Cliente" asp-action="Index">Cliente</a>
+                            <a class="nav-link" asp-area="" asp-controller="Cliente" asp-action="Index">
+                                <i class="fas fa-user"></i> Cliente
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Veiculo" asp-action="Index">Veículo</a>
+                            <a class="nav-link" asp-area="" asp-controller="Veiculo" asp-action="Index">
+                                <i class="fas fa-car"></i> Veículo
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Servicos" asp-action="Index">Servicos</a>
+                            <a class="nav-link" asp-area="" asp-controller="Servicos" asp-action="Index">
+                                <i class="fas fa-tools"></i> Serviços
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Venda" asp-action="Index">Vendas</a>
+                            <a class="nav-link" asp-area="" asp-controller="Venda" asp-action="Index">
+                                <i class="fas fa-dollar-sign"></i> Vendas
+                            </a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light btn-sm px-3" asp-area="" asp-controller="AlterarSenha" asp-action="Alterar">Alterar Senha</a>
+                            <a class="nav-link btn btn-outline-light btn-sm px-3" asp-area="" asp-controller="AlterarSenha" asp-action="Alterar">
+                                <i class="fas fa-key"></i> Alterar Senha
+                            </a>
                         </li>
-                        <br />
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light btn-sm px-3" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                            <a class="nav-link btn btn-outline-light btn-sm px-3" asp-area="" asp-controller="Login" asp-action="Logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
                         </li>
                     </ul>
                 </div>

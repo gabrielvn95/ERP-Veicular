@@ -6,16 +6,18 @@
 
 <div class="painel-container">
     <div class="painel-header">
-        <h2 class="painel-title">Clientes</h2>
+        <h2 class="painel-title">
+            <i class="fas fa-users me-2"></i>Clientes
+        </h2>
         <a href="/Cliente/Cadastrar" class="painel-btn">
-            <i class="fas fa-user-plus"></i> Novo Cliente
+            <i class="fas fa-user-plus me-1"></i> Novo Cliente
         </a>
     </div>
 
     @if (TempData["MensagemSucesso"] != null)
     {
         <div class="alert-custom alert-sucesso">
-            <i class="fas fa-check-circle"></i> @TempData["MensagemSucesso"]
+            <i class="fas fa-check-circle me-1"></i> @TempData["MensagemSucesso"]
         </div>
     }
 
@@ -23,10 +25,10 @@
         <table id="tabela-clientes" class="display painel-table" style="width:100%">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Telefone</th>
-                    <th class="acoes-coluna">Ações</th>
+                    <th><i class="fas fa-id-badge me-1"></i>Nome</th>
+                    <th><i class="fas fa-id-card me-1"></i>CPF</th>
+                    <th><i class="fas fa-phone me-1"></i>Telefone</th>
+                    <th class="acoes-coluna"><i class="fas fa-cogs me-1"></i>Ações</th>
                 </tr>
             </thead>
             <tbody>
