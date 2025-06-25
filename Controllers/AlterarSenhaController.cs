@@ -9,10 +9,11 @@ namespace GestVeicular.Controllers
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly ISessaoInterface _sessaoInterface;
+
         public AlterarSenhaController(IUsuarioRepositorio usuarioRepositorio, ISessaoInterface sessaoInterface)
         {
-                _sessaoInterface = sessaoInterface;
-                _usuarioRepositorio = usuarioRepositorio;
+            _usuarioRepositorio = usuarioRepositorio;
+            _sessaoInterface = sessaoInterface;
         }
 
         [HttpGet]
@@ -27,23 +28,29 @@ namespace GestVeicular.Controllers
             try
             {
                 var usuario = _sessaoInterface.BuscarSessao();
+
+                if (usuario == null)
+                {
+                    TempData["MensagemErro"] = "Usuário não está logado.";
+                    return RedirectToAction("Login", "Login");
+                }
+
                 alterarSenha.Id = usuario.IdUsuario;
 
                 if (ModelState.IsValid)
                 {
                     _usuarioRepositorio.AlterarSenha(alterarSenha);
                     TempData["MensagemSucesso"] = "Senha alterada com sucesso!";
-                    return RedirectToAction("Alterar");
+                    return RedirectToAction("Index", "Home");
                 }
-                return View("Alterar", alterarSenha);
 
+                return View(alterarSenha); 
             }
             catch (Exception ex)
             {
                 TempData["MensagemErro"] = "Erro ao alterar a senha: " + ex.Message;
                 return RedirectToAction("Alterar");
             }
-
         }
     }
 }

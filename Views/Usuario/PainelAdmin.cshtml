@@ -7,18 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="painel-container">
-    @if (TempData["MensagemErro"] != null)
-    {
-        <div class="alert-custom alert-erro">
-            @TempData["MensagemErro"]
-        </div>
-    }
-    else if (TempData["MensagemSucesso"] != null)
-    {
-        <div class="alert-custom alert-sucesso">
-            @TempData["MensagemSucesso"]
-        </div>
-    }
 
     <div class="painel-header">
         <h2 class="painel-title"><i class="fas fa-users-cog"></i> Painel de Controle de Usuários</h2>

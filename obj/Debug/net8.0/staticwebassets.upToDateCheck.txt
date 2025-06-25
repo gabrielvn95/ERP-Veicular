@@ -1,5 +1,6 @@
 wwwroot\css\EditarUsuario.css
 wwwroot\css\ExcluirUsuario.css
+wwwroot\css\layout.css
 wwwroot\css\Login.css
 wwwroot\css\PainelCliente.css
 wwwroot\css\PainelUsuario.css
@@ -13,6 +14,7 @@ wwwroot\css\VeiculoRegister.css
 wwwroot\favicon.ico
 wwwroot\Images\background-login.jpg
 wwwroot\Images\gvn-logo.png
+wwwroot\js\Alerts.js
 wwwroot\js\cliente.js
 wwwroot\js\Servicos.js
 wwwroot\js\site.js
@@ -75,4 +77,3 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\css\layout.css
